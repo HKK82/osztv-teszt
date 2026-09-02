@@ -630,6 +630,28 @@
       startBtn.disabled = false;
     }
   }
+  function updateConfetti(pct) {
+    if (pct === 100) {
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 200,
+          spread: 120,
+          origin: { y: 0.5 },
+          zIndex: 9999,
+          colors: ['#0E7C86', '#1F8A57', '#C1502B', '#E3F5EC', '#F4F4F4']
+        });
+        setTimeout(function() {
+          confetti({
+            particleCount: 150,
+            spread: 100,
+            origin: { y: 0.5 },
+            zIndex: 9999,
+            colors: ['#0E7C86', '#1F8A57', '#C1502B', '#E3F5EC', '#F4F4F4']
+          });
+        }, 500);
+      }
+    }
+  }
   updateSetupSummary();
 
   document.getElementById('startBtn').addEventListener('click', startQuiz);
@@ -917,6 +939,8 @@
       scope: scopeLabel,
       score: earned, max: max, pct: pct
     });
+    
+    updateConfetti(pct);
   }
 
   document.getElementById('backToSetupBtn').addEventListener('click', function(){

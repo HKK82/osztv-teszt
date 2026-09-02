@@ -1,0 +1,932 @@
+<title>OSZTV Gyakorló</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap');
+
+  :root{
+    --bg:#F4F7F8;
+    --surface:#FFFFFF;
+    --surface-2:#EAF0F2;
+    --ink:#132226;
+    --ink-soft:#2B3B40;
+    --muted:#5B6E76;
+    --line:#DAE3E6;
+    --line-soft:#E7EEF0;
+    --accent:#0E7C86;
+    --accent-ink:#FFFFFF;
+    --accent-soft:#DCEFEF;
+    --good:#1F8A57;
+    --good-bg:#E3F5EC;
+    --bad:#C1502B;
+    --bad-bg:#FBEAE2;
+    --amber:#B5791F;
+    --amber-bg:#FBF0DD;
+    --shadow: 0 1px 2px rgba(19,34,38,.06), 0 8px 24px -12px rgba(19,34,38,.18);
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0C1417;
+      --surface:#141D21;
+      --surface-2:#1B2529;
+      --ink:#E9F0F1;
+      --ink-soft:#C6D3D6;
+      --muted:#8FA3A9;
+      --line:#25333838;
+      --line:#283539;
+      --line-soft:#202C30;
+      --accent:#39CFC2;
+      --accent-ink:#062421;
+      --accent-soft:#12302E;
+      --good:#49C285;
+      --good-bg:#123024;
+      --bad:#E58561;
+      --bad-bg:#341C15;
+      --amber:#E0AC55;
+      --amber-bg:#332409;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px -14px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0C1417;
+    --surface:#141D21;
+    --surface-2:#1B2529;
+    --ink:#E9F0F1;
+    --ink-soft:#C6D3D6;
+    --muted:#8FA3A9;
+    --line:#283539;
+    --line-soft:#202C30;
+    --accent:#39CFC2;
+    --accent-ink:#062421;
+    --accent-soft:#12302E;
+    --good:#49C285;
+    --good-bg:#123024;
+    --bad:#E58561;
+    --bad-bg:#341C15;
+    --amber:#E0AC55;
+    --amber-bg:#332409;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px -14px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box;}
+  [hidden]{ display:none !important; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Manrope',system-ui,-apple-system,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Sora',system-ui,sans-serif;
+    text-wrap:balance;
+    margin:0;
+    color:var(--ink);
+  }
+  .mono{ font-family:'JetBrains Mono',ui-monospace,monospace; }
+  .wrap{
+    max-width:880px;
+    margin:0 auto;
+    padding:28px 20px 64px;
+  }
+
+  /* ---------- Header ---------- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:16px 20px;
+    border-bottom:1px solid var(--line);
+    background:var(--surface);
+    position:sticky; top:0; z-index:20;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .brand-mark{
+    width:34px; height:34px; border-radius:9px;
+    background:linear-gradient(155deg, var(--accent), color-mix(in srgb, var(--accent) 55%, var(--ink)));
+    display:flex; align-items:center; justify-content:center;
+    color:var(--accent-ink); font-family:'JetBrains Mono'; font-weight:700; font-size:13px;
+    flex:none;
+  }
+  .brand-text{ display:flex; flex-direction:column; line-height:1.2; }
+  .brand-text b{ font-family:'Sora'; font-size:15px; }
+  .brand-text span{ font-size:11.5px; color:var(--muted); font-family:'JetBrains Mono'; letter-spacing:.02em;}
+  .top-right{ display:flex; align-items:center; gap:14px; }
+  .timer{
+    font-family:'JetBrains Mono'; font-weight:600; font-size:14px;
+    padding:6px 12px; border-radius:999px; border:1px solid var(--line);
+    background:var(--surface-2); color:var(--ink-soft); min-width:78px; text-align:center;
+  }
+  .timer.low{ color:var(--bad); border-color:var(--bad); background:var(--bad-bg); }
+
+  /* ---------- Cards / generic ---------- */
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono'; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); font-weight:600;
+  }
+  .lede{ color:var(--muted); font-size:15px; max-width:62ch; }
+
+  /* ---------- Setup screen ---------- */
+  .hero{ padding:30px 26px 26px; margin-bottom:20px; }
+  .hero .stat-row{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:20px;
+  }
+  .stat-tile{
+    border:1px solid var(--line-soft); border-radius:10px; padding:10px 12px; background:var(--surface-2);
+  }
+  .stat-tile b{ display:block; font-family:'JetBrains Mono'; font-size:19px; font-variant-numeric:tabular-nums; }
+  .stat-tile span{ font-size:11.5px; color:var(--muted); }
+
+  .section-title{ font-family:'Sora'; font-weight:700; font-size:16px; margin:26px 0 12px; display:flex; align-items:center; gap:8px;}
+  .section-title .n{
+    font-family:'JetBrains Mono'; font-size:11px; color:var(--muted); border:1px solid var(--line); border-radius:6px; padding:2px 6px;
+  }
+
+  .presets{ display:flex; flex-wrap:wrap; gap:10px; }
+  .preset-btn{
+    flex:1 1 220px; text-align:left; cursor:pointer;
+    border:1px solid var(--line); background:var(--surface); border-radius:12px; padding:14px 16px;
+    transition:border-color .15s, background .15s;
+  }
+  .preset-btn:hover{ border-color:var(--accent); }
+  .preset-btn b{ display:block; font-family:'Sora'; font-size:14.5px; margin-bottom:3px;}
+  .preset-btn span{ font-size:12.5px; color:var(--muted); }
+
+  .chip-grid{ display:flex; flex-direction:column; gap:8px; }
+  .chip{
+    display:flex; align-items:center; gap:12px; cursor:pointer;
+    border:1px solid var(--line); border-radius:11px; padding:11px 14px; background:var(--surface);
+    transition:border-color .15s, background .15s;
+  }
+  .chip.on{ border-color:var(--accent); background:var(--accent-soft); }
+  .chip input{ accent-color:var(--accent); width:16px; height:16px; flex:none; }
+  .chip .chip-label{ font-weight:600; font-size:14px; flex:1; }
+  .chip .chip-meta{ font-family:'JetBrains Mono'; font-size:12px; color:var(--muted); white-space:nowrap; }
+
+  .mode-toggle{ display:flex; gap:10px; }
+  .mode-opt{
+    flex:1; cursor:pointer; border:1px solid var(--line); border-radius:12px; padding:14px 16px; background:var(--surface);
+  }
+  .mode-opt.on{ border-color:var(--accent); background:var(--accent-soft); }
+  .mode-opt b{ display:block; font-family:'Sora'; font-size:14.5px; margin-bottom:3px;}
+  .mode-opt span{ font-size:12.5px; color:var(--muted); }
+
+  .row-between{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .switch-row{ display:flex; align-items:center; gap:10px; font-size:13.5px; color:var(--ink-soft); }
+  .switch-row input{ accent-color:var(--accent); width:15px; height:15px; }
+
+  .btn{
+    font-family:'Manrope'; font-weight:700; font-size:14.5px;
+    border-radius:11px; border:1px solid transparent; padding:13px 22px; cursor:pointer;
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .btn-primary{ background:var(--accent); color:var(--accent-ink); }
+  .btn-primary:disabled{ opacity:.45; cursor:not-allowed; }
+  .btn-ghost{ background:transparent; color:var(--ink-soft); border-color:var(--line); }
+  .btn-ghost:hover{ border-color:var(--accent); color:var(--accent); }
+  .btn-sm{ padding:9px 14px; font-size:13px; border-radius:9px; }
+
+  .start-cta{ margin-top:24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+  .start-summary{ font-size:13px; color:var(--muted); }
+  .start-summary b{ color:var(--ink); font-family:'JetBrains Mono'; }
+
+  .ai-card{ padding:18px 20px 20px; }
+  .ai-intro{ font-size:13px; color:var(--muted); line-height:1.6; margin:0 0 14px; }
+  .ai-intro b{ color:var(--ink-soft); }
+
+  .history{ margin-top:26px; }
+  .history table{ width:100%; border-collapse:collapse; font-size:13px; }
+  .history th{ text-align:left; color:var(--muted); font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em; padding:6px 10px; border-bottom:1px solid var(--line);}
+  .history td{ padding:8px 10px; border-bottom:1px solid var(--line-soft); font-family:'JetBrains Mono'; font-size:12.5px;}
+  .history tr:last-child td{ border-bottom:none; }
+
+  .foot-note{ margin-top:30px; font-size:12px; color:var(--muted); line-height:1.6; }
+
+  /* ---------- Quiz screen ---------- */
+  .quiz-head{ display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:14px; flex-wrap:wrap;}
+  .progress-track{ height:6px; border-radius:999px; background:var(--line-soft); overflow:hidden; margin:14px 0 22px;}
+  .progress-fill{ height:100%; background:var(--accent); border-radius:999px; transition:width .25s ease; }
+
+  .qcard{ padding:28px 26px 26px; }
+  .qmeta{ display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+  .badge{
+    font-family:'JetBrains Mono'; font-size:11.5px; font-weight:600; padding:4px 9px; border-radius:7px;
+    border:1px solid var(--line); color:var(--muted); background:var(--surface-2);
+  }
+  .badge.accent{ color:var(--accent); border-color:var(--accent); background:var(--accent-soft);}
+  .badge.extra-badge{ color:var(--amber); border-color:var(--amber); background:var(--amber-bg);}
+  .qstem{ font-family:'Sora'; font-size:19px; font-weight:600; line-height:1.4; text-wrap:balance; margin-bottom:22px;}
+
+  .options{ display:flex; flex-direction:column; gap:10px; }
+  .opt{
+    display:flex; align-items:flex-start; gap:12px; text-align:left; width:100%; cursor:pointer;
+    border:1.5px solid var(--line); border-radius:12px; padding:13px 16px; background:var(--surface);
+    font-family:'Manrope'; font-size:14.5px; color:var(--ink); transition:border-color .12s, background .12s;
+  }
+  .opt:hover:not(:disabled){ border-color:var(--accent); }
+  .opt:disabled{ cursor:default; }
+  .opt .letter{
+    font-family:'JetBrains Mono'; font-weight:700; font-size:12.5px;
+    width:24px; height:24px; border-radius:7px; border:1.5px solid var(--line);
+    display:flex; align-items:center; justify-content:center; flex:none; color:var(--muted);
+  }
+  .opt.selected{ border-color:var(--accent); background:var(--accent-soft); }
+  .opt.selected .letter{ border-color:var(--accent); color:var(--accent); }
+  .opt.correct{ border-color:var(--good); background:var(--good-bg); }
+  .opt.correct .letter{ border-color:var(--good); color:var(--good); background:transparent;}
+  .opt.wrong{ border-color:var(--bad); background:var(--bad-bg); }
+  .opt.wrong .letter{ border-color:var(--bad); color:var(--bad); }
+
+  .feedback-line{
+    margin-top:16px; padding:11px 14px; border-radius:10px; font-size:13.5px; font-weight:600;
+    display:flex; align-items:center; gap:8px;
+  }
+  .feedback-line.good{ background:var(--good-bg); color:var(--good); }
+  .feedback-line.bad{ background:var(--bad-bg); color:var(--bad); }
+
+  .quiz-nav{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:20px; }
+  .quiz-nav .spacer{ flex:1; }
+
+  .qgrid{ display:flex; flex-wrap:wrap; gap:6px; margin:18px 0 4px; }
+  .qdot{
+    width:30px; height:30px; border-radius:8px; border:1px solid var(--line); background:var(--surface);
+    font-family:'JetBrains Mono'; font-size:11.5px; color:var(--muted); cursor:pointer; display:flex; align-items:center; justify-content:center;
+  }
+  .qdot.answered{ background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+  .qdot.current{ outline:2px solid var(--accent); outline-offset:1px; }
+
+  /* ---------- Results ---------- */
+  .score-hero{ padding:30px 26px; text-align:left; }
+  .score-big{ display:flex; align-items:baseline; gap:12px; margin-top:6px; }
+  .score-big .num{ font-family:'JetBrains Mono'; font-size:48px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .score-big .den{ font-family:'JetBrains Mono'; font-size:18px; color:var(--muted); }
+  .score-big .pct{ margin-left:auto; font-family:'JetBrains Mono'; font-size:22px; color:var(--accent); font-weight:700; }
+
+  .bar-row{ display:grid; grid-template-columns:200px 1fr 90px; align-items:center; gap:12px; padding:9px 0; font-size:13px;}
+  .bar-row .lbl{ color:var(--ink-soft); font-weight:600; }
+  .bar-track{ height:9px; border-radius:999px; background:var(--surface-2); overflow:hidden; }
+  .bar-fill{ height:100%; border-radius:999px; background:var(--accent); }
+  .bar-row .val{ font-family:'JetBrains Mono'; font-size:12.5px; color:var(--muted); text-align:right; }
+
+  .review-item{ padding:16px 0; border-bottom:1px solid var(--line-soft); }
+  .review-item:last-child{ border-bottom:none; }
+  .review-q{ font-family:'Sora'; font-weight:600; font-size:15px; margin-bottom:8px; }
+  .review-ans{ font-size:13.5px; display:flex; flex-direction:column; gap:4px;}
+  .review-ans .you{ color:var(--bad); }
+  .review-ans .right{ color:var(--good); }
+  .review-ans b{ font-family:'JetBrains Mono'; font-size:11.5px; margin-right:6px;}
+
+  .empty-review{ color:var(--muted); font-size:14px; padding:10px 0; }
+
+  .screen{ display:none; }
+  .screen.active{ display:block; animation:fadein .28s ease; }
+  @keyframes fadein{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+
+  @media (max-width:600px){
+    .hero .stat-row{ grid-template-columns:repeat(2,1fr); }
+    .bar-row{ grid-template-columns:1fr; row-gap:4px; }
+    .bar-row .val{ text-align:left; }
+    .score-big .pct{ margin-left:0; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark">OT</div>
+    <div class="brand-text">
+      <b>OSZTV Gyakorló</b>
+      <span>Informatikai rendszer- és alkalmazás-üzemeltető technikus</span>
+    </div>
+  </div>
+  <div class="top-right">
+    <div class="timer mono" id="timerBox" hidden>--:--</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ===================== SETUP SCREEN ===================== -->
+  <section class="screen active" id="screen-setup">
+    <div class="card hero">
+      <div class="eyebrow">Magyar Kereskedelmi és Iparkamara &middot; Országos Szakmai Tanulmányi Verseny</div>
+      <h1 style="font-size:26px; margin-top:8px;">Területi előválogató &ndash; gyakorló feladatsor</h1>
+      <p class="lede" style="margin-top:8px;">150 kérdés a 2026-os OSZTV komplex írásbeli feladatsorából, a hivatalos javítókulccsal &ndash; plusz 70 további gyakorlókérdés, hogy sose legyen ugyanaz a feladatsor. Válaszd ki, mit gyakoroltok, és induljon a kör.</p>
+      <div class="stat-row">
+        <div class="stat-tile"><b>300</b><span>elérhető pont</span></div>
+        <div class="stat-tile"><b>150</b><span>kérdés összesen</span></div>
+        <div class="stat-tile"><b>180</b><span>perc az élesben</span></div>
+        <div class="stat-tile"><b>4</b><span>tesztfeladatsor</span></div>
+      </div>
+    </div>
+
+    <div class="section-title">Gyors indítás</div>
+    <div class="presets">
+      <div class="preset-btn" data-preset="all">
+        <b>Teljes feladatsor</b>
+        <span>150 kérdés &middot; 300 pont &middot; mind a 4 rész</span>
+      </div>
+      <div class="preset-btn" data-preset="subject">
+        <b>Csak a te tárgyad &ndash; Linux + Felhő</b>
+        <span>35 kérdés &middot; 70 pont &middot; III. rész Linux-kérdései + IV. rész</span>
+      </div>
+    </div>
+
+    <div class="section-title">Témakörök <span class="n" id="selCountLabel">150 kérdés kiválasztva</span></div>
+    <div class="chip-grid" id="chipGrid"></div>
+
+    <div class="section-title">Bővített kérdésbank</div>
+    <div class="card ai-card">
+      <p class="ai-intro">70 további, AI-írt gyakorlókérdés (ugyanabban a formátumban és nehézségi szinten, mint a hivatalos feladatsor), hogy ne mindig ugyanaz a 150 kérdés jöjjön szembe. Ezek <b>nem a hivatalos versenyanyag részei</b>, a kvízben mindig külön, sárga &bdquo;bővítő&rdquo; jelzéssel jelennek meg &ndash; nincs hozzá fiók vagy bejelentkezés, mindenkinek azonnal működik.</p>
+      <label class="switch-row" style="margin-top:2px;">
+        <input type="checkbox" id="extraToggle"> Bővítő kérdések bekeverése a gyakorlásba <span class="mono" id="extraCountLabel">(+70 db, témakörönként megoszlik)</span>
+      </label>
+    </div>
+
+    <div class="section-title">Üzemmód</div>
+    <div class="mode-toggle" id="modeToggle">
+      <div class="mode-opt on" data-mode="practice">
+        <b>Gyakorlás</b>
+        <span>Azonnali visszajelzés minden kérdés után</span>
+      </div>
+      <div class="mode-opt" data-mode="exam">
+        <b>Verseny szimuláció</b>
+        <span>Visszaszámláló, eredmény csak a végén</span>
+      </div>
+    </div>
+
+    <div class="section-title">Teszt hossza</div>
+    <div class="mode-toggle" id="limitToggle">
+      <div class="mode-opt" data-limit="10"><b>10 kérdés</b><span>Gyors ismétlés</span></div>
+      <div class="mode-opt on" data-limit="20"><b>20 kérdés</b><span>Normál gyakorlás</span></div>
+      <div class="mode-opt" data-limit="50"><b>50 kérdés</b><span>Hosszabb teszt</span></div>
+      <div class="mode-opt" data-limit="0"><b>Minden</b><span>Kiválasztott kérdés</span></div>
+    </div>
+
+    <div class="row-between" style="margin-top:16px;">
+      <label class="switch-row"><input type="checkbox" id="shuffleToggle" checked> Kérdések véletlen sorrendben</label>
+    </div>
+
+    <div class="card start-cta" style="padding:18px 22px;">
+      <div class="start-summary" id="startSummary">Válassz üzemmódot és témakört a induláshoz.</div>
+      <button class="btn btn-primary" id="startBtn">Kezdés &nbsp;&rarr;</button>
+    </div>
+
+    <div class="history" id="historyBlock" hidden>
+      <div class="section-title">Korábbi próbálkozásaid <span class="n">ezen a gépen</span></div>
+      <div class="card" style="padding:6px 18px;">
+        <table>
+          <thead><tr><th>Dátum</th><th>Mód</th><th>Témakör</th><th>Eredmény</th></tr></thead>
+          <tbody id="historyBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <p class="foot-note">A kérdések és a javítókulcs a MKIK 2026-os Országos Szakmai Tanulmányi Verseny, Informatikai rendszer- és alkalmazás-üzemeltető technikus szakma területi előválogató feladatsorából származnak. Ez egy gyakorló eszköz, nem hivatalos versenyfelület &ndash; az eredmények csak ezen a böngészőn, helyben tárolódnak.</p>
+  </section>
+
+  <!-- ===================== QUIZ SCREEN ===================== -->
+  <section class="screen" id="screen-quiz">
+    <div class="quiz-head">
+      <div class="eyebrow" id="quizModeLabel">Gyakorlás</div>
+      <div class="badge mono" id="quizCounter">1 / 150</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+    <div class="card qcard">
+      <div class="qmeta">
+        <span class="badge accent mono" id="qSection">I. Alapismeretek</span>
+        <span class="badge mono" id="qPoints">2 pont</span>
+      </div>
+      <div class="qstem" id="qStem">&nbsp;</div>
+      <div class="options" id="qOptions"></div>
+      <div id="feedbackBox"></div>
+    </div>
+
+    <div class="qgrid" id="examNav" hidden></div>
+
+    <div class="quiz-nav">
+      <button class="btn btn-ghost" id="prevBtn">&larr; Előző</button>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" id="quitBtn">Kilépés</button>
+      <button class="btn btn-primary" id="nextBtn">Következő &rarr;</button>
+      <button class="btn btn-primary" id="finishBtn" hidden>Befejezés</button>
+    </div>
+  </section>
+
+  <!-- ===================== RESULTS SCREEN ===================== -->
+  <section class="screen" id="screen-results">
+    <div class="card score-hero">
+      <div class="eyebrow" id="resultModeLabel">Gyakorlás eredménye</div>
+      <div class="score-big">
+        <span class="num" id="scoreNum">0</span>
+        <span class="den" id="scoreDen">/ 0 pont</span>
+        <span class="pct" id="scorePct">0%</span>
+      </div>
+    </div>
+
+    <div class="section-title">Bontás témakörönként</div>
+    <div class="card" style="padding:16px 22px;" id="sectionBars"></div>
+
+    <div class="section-title">Amit érdemes átnézni</div>
+    <div class="card" style="padding:6px 22px;" id="reviewList"></div>
+
+    <div class="start-cta">
+      <div class="start-summary">Az eredmény ezen a gépen mentve a &bdquo;Korábbi próbálkozásaid&rdquo; listába.</div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-ghost" id="backToSetupBtn">Beállítások</button>
+        <button class="btn btn-primary" id="retryBtn">Újra ugyanezekkel</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var QUESTIONS = [{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":1,"stem":"Melyik alkatrész tárol elektromos töltést?","options":{"a":"Ellenállás","b":"Tekercs","c":"Dióda","d":"Kondenzátor"},"correct":"d"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":2,"stem":"Mi az Ohm törvény helyes képlete?","options":{"a":"U = R * I","b":"I = P * U","c":"R = U * P","d":"U = I / R"},"correct":"a"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":3,"stem":"Melyik nyílt forráskódú operációs rendszer?","options":{"a":"Windows","b":"Linux","c":"macOS","d":"iOS"},"correct":"b"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":4,"stem":"Melyik paranccsal listázható egy könyvtár tartalma Windows parancssorban?","options":{"a":"dir","b":"ls","c":"list","d":"show"},"correct":"a"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":5,"stem":"Melyik parancs töröl egy fájlt Linuxban?","options":{"a":"cp","b":"rm","c":"mv","d":"del"},"correct":"b"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":6,"stem":"Mi a BIOS/UEFI fő feladata?","options":{"a":"Hardver inicializálása és rendszerindítás","b":"Grafikus felület biztosítása","c":"Hálózati kapcsolatok kezelése","d":"Vírusvédelem futtatása"},"correct":"a"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":7,"stem":"Melyik alkatrész képes adatokat tárolni kikapcsolás után is?","options":{"a":"RAM","b":"SSD","c":"Cache memória","d":"Regiszter"},"correct":"b"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":8,"stem":"Melyik protokoll felelős az IP-cím kiosztásért?","options":{"a":"HTTP","b":"FTP","c":"DHCP","d":"DNS"},"correct":"c"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":9,"stem":"Az alábbiak közül melyik a legutolsó WiFi szabvány?","options":{"a":"802.11g","b":"802.11n","c":"802.11ax","d":"802.11ac"},"correct":"c"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":10,"stem":"Melyik paranccsal lehet új Git repositoryt létrehozni?","options":{"a":"git start","b":"git init","c":"git new","d":"git create"},"correct":"b"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":11,"stem":"Melyik eszköz NEM csoportmunka támogatására szolgál?","options":{"a":"Slack","b":"Trello","c":"Photoshop","d":"Microsoft Teams"},"correct":"c"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":12,"stem":"Mi történik, ha a LED-et fordított polaritással kötjük be?","options":{"a":"Erősebben világít","b":"Nem világít","c":"Hangot ad ki","d":"Meghosszabbodik az élettartama"},"correct":"b"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":13,"stem":"Melyik mérőeszköz szükséges egy ellenállás értékének méréséhez?","options":{"a":"Multiméter","b":"Oszcilloszkóp","c":"Spektrumanalizátor","d":"Logikai analizátor"},"correct":"a"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":14,"stem":"Mi a kernel szerepe?","options":{"a":"A hardver és a szoftver közötti kapcsolat biztosítása","b":"A felhasználói felület megjelenítése","c":"Az internetkapcsolat létrehozása","d":"A vírusok elleni védekezés"},"correct":"a"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":15,"stem":"Hol találhatók a konfigurációs fájlok Linuxban?","options":{"a":"/bin","b":"/etc","c":"/usr","d":"/var"},"correct":"b"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":16,"stem":"Mi a SATA csatlakozó szerepe?","options":{"a":"Monitor csatlakoztatása","b":"Hangszóró csatlakoztatása","c":"Billentyűzet csatlakoztatása","d":"Merevlemezek és SSD-k csatlakoztatása"},"correct":"d"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":17,"stem":"Hány bites az IPv6 cím?","options":{"a":"32 bit","b":"128 bit","c":"64 bit","d":"256 bit"},"correct":"b"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":18,"stem":"Melyik DoS támadás jellemzője?","options":{"a":"Adatok titkosítása váltságdíjért","b":"Fájlok törlése","c":"A szolgáltatás megbénítása túlterheléssel","d":"Felhasználói azonosítók lopása"},"correct":"c"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":19,"stem":"Melyik HTML elem jelöli a legnagyobb címsort?","options":{"a":"<h6>","b":"<p>","c":"<h1>","d":"<title>"},"correct":"c"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":20,"stem":"Mi a Bootstrap?","options":{"a":"Reszponzív webfejlesztési keretrendszer","b":"Vírusirtó program","c":"Szövegszerkesztő","d":"Grafikai fájl kiterjesztése"},"correct":"a"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":21,"stem":"Mit jelent a phishing?","options":{"a":"Jelszó titkosítása","b":"Tűzfal konfigurálása","c":"Hálózat virtualizálása","d":"Adathalász csalás"},"correct":"d"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":22,"stem":"Egy 2 kΩ-os ellenálláson 12 V feszültség esik. Mennyi az átfolyó áram?","options":{"a":"6 mA","b":"24 mA","c":"6 A","d":"24 A"},"correct":"a"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":23,"stem":"Melyik IP cím jelöli a loopback címet?","options":{"a":"127.0.0.1","b":"255.255.255.255","c":"0.0.0.0","d":"192.168.1.1"},"correct":"a"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":24,"stem":"Mi az alapértelmezett port a HTTPS protokoll esetén?","options":{"a":"80","b":"443","c":"22","d":"21"},"correct":"b"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":25,"stem":"Mit jelent a kétfaktoros hitelesítés (2FA)?","options":{"a":"Két jelszó használata","b":"Jelszó és felhasználónév ismétlése","c":"Két PIN-kód használata","d":"Két, egymástól független azonosítási tényező használata"},"correct":"d"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":26,"stem":"Mi az SQL injection?","options":{"a":"Hálózati csomagok túlterhelése","b":"Adatbázis titkosítása","c":"Felhasználói adatok titkosítása","d":"Hackelési technika"},"correct":"d"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":27,"stem":"Melyik parancs mutatja meg Linuxban az aktív folyamatokat?","options":{"a":"ls","b":"ps","c":"df","d":"du"},"correct":"b"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":28,"stem":"Melyik IaaS szolgáltatás?","options":{"a":"Google Docs","b":"Dropbox","c":"Microsoft Azure VM","d":"Slack"},"correct":"c"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":29,"stem":"Mi a hypervisor?","options":{"a":"Operációs rendszer kernelje","b":"Egy BIOS modul","c":"Olyan szoftver, amely kezeli a virtuális gépeket","d":"Grafikus felület"},"correct":"c"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":30,"stem":"Mi a Gantt-diagram fő szerepe?","options":{"a":"Költségek kiszámítása","b":"Kód optimalizálás","c":"Adatbázis tervezés","d":"Projekt ütemezés vizualizálása"},"correct":"d"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":31,"stem":"Melyik technológia támogatja a konténereket?","options":{"a":"Docker","b":"Excel","c":"Word","d":"Wireshark"},"correct":"a"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":32,"stem":"Mit jelent a brute force támadás?","options":{"a":"Felhasználók megtévesztése","b":"Vírus rejtése e-mailben","c":"Jelszó kitalálása minden lehetséges variáció kipróbálásával","d":"Szerver leállítása"},"correct":"c"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":33,"stem":"Milyen kimeneti feszültség NINCS egy ATX tápegység esetén?","options":{"a":"+24 V","b":"+12 V","c":"+5 V","d":"+3,3 V"},"correct":"a"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":34,"stem":"Némely videókártya esetén miért szükséges plusz tápellátás csatlakoztatása?","options":{"a":"A videókártya csak így tud egynél a több monitort kezelni","b":"A plusz tápcsatlakozó a memória bővítéséhez szükséges","c":"Csak a hűtőventilátor működtetéséhez kell","d":"A PCI Express foglalat önmagában nem tud elegendő teljesítményt biztosítani számára"},"correct":"d"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":35,"stem":"Melyik a legújabb USB generáció?","options":{"a":"USB4","b":"USB 3.0","c":"USB 3.2","d":"USB 2.0"},"correct":"a"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":36,"stem":"Számítógépek szerelése során milyen csavarhúzóra van szükségünk a legtöbb esetben?","options":{"a":"Laposfejű csavarhúzó","b":"Torx csavarhúzó","c":"Imbuszkulcs","d":"Keresztfejű csavarhúzó (Phillips)"},"correct":"d"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":37,"stem":"Mi az UPS?","options":{"a":"Szünetmentes tápegység","b":"Univerzális programozási szoftver","c":"Ultra gyors processzor","d":"USB port szabvány"},"correct":"a"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":38,"stem":"Hány érpár található az UTP kábelben?","options":{"a":"2","b":"4","c":"6","d":"8"},"correct":"b"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":39,"stem":"Mi a T568B bekötés helyes sorrendje?","options":{"a":"Fehér-zöld, Zöld, Fehér-narancs, Kék, Fehér-kék, Narancs, Fehér-barna, Barna","b":"Fehér-narancs, Narancs, Fehér-zöld, Kék, Fehér-kék, Zöld, Fehér-barna, Barna","c":"Fehér-kék, Kék, Fehér-zöld, Narancs, Fehér-narancs, Zöld, Fehér-barna, Barna","d":"Fehér-barna, Barna, Fehér-zöld, Kék, Fehér-kék, Zöld, Fehér-narancs, Narancs"},"correct":"b"},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"num":40,"stem":"Mi az SFP?","options":{"a":"Speciális fájlrendszer protokoll","b":"Számítógép processzorának hűtője","c":"Cserélhető interfész modul","d":"Szoftverfrissítési program"},"correct":"c"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":1,"stem":"Melyik szabvány használható VLAN trönk kapcsolatokhoz?","options":{"a":"802.1Q","b":"802.3","c":"STP","d":"802.11"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":2,"stem":"Mi az STP feladata?","options":{"a":"MAC-címek kiosztása","b":"IP címek kiosztása","c":"Titkosítás biztosítása","d":"Hurokmentes topológia fenntartása"},"correct":"d"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":3,"stem":"Melyik paranccsal konfigurálhatunk statikus útvonalat Cisco routeren?","options":{"a":"route add","b":"ip route","c":"set route","d":"interface route"},"correct":"b"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":4,"stem":"Milyen metrikát használ az OSPF?","options":{"a":"Költség","b":"Ugrásszám","c":"Késleltetés","d":"Időbélyeg"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":5,"stem":"Mi a PAT lényege?","options":{"a":"Több belső IP egy külső IP-re fordítása","b":"Egy belső IP több külső IP-re fordítása","c":"IP címek automatikus kiosztása","d":"MAC címek cseréje"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":6,"stem":"Melyik paranccsal állíthatunk be DHCP-t Cisco routeren?","options":{"a":"set dhcp","b":"dhcp assign","c":"ip dhcp pool","d":"ip pool dhcp"},"correct":"c"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":7,"stem":"Melyik cím IPv6 loopback cím?","options":{"a":"::0","b":"::1","c":"FE80::1","d":"FF02::1"},"correct":"b"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":8,"stem":"Mi a fő hátránya a Telnetnek az SSH-hoz képest?","options":{"a":"Nem támogat IPv6-ot","b":"Csak Windows alatt működik","c":"Lassabb","d":"Nincs titkosítás"},"correct":"d"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":9,"stem":"Mi a Syslog feladata?","options":{"a":"IP cím kiosztása","b":"MAC cím feloldás","c":"Hálózati eszközök naplóüzeneteinek gyűjtése","d":"Titkosítás"},"correct":"c"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":10,"stem":"Mit jeleníthetünk meg a CDP használatával?","options":{"a":"Az eszköz IP címei","b":"VLAN listát","c":"Szomszédos Cisco eszközök adatait","d":"Az STP státuszát"},"correct":"c"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":11,"stem":"Mi az LLDP?","options":{"a":"Nyílt szabványú eszközfelderítő protokoll","b":"Cisco saját protokollja","c":"VLAN konfigurációs protokoll","d":"Routing protokoll"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":12,"stem":"Mi a HSRP fő szerepe?","options":{"a":"WiFi titkosítás","b":"Portbiztonság","c":"Átjáró redundancia biztosítása","d":"ACL kezelés"},"correct":"c"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":13,"stem":"Melyik cím multicast?","options":{"a":"192.168.0.1","b":"224.0.0.1","c":"127.0.0.1","d":"10.0.0.1"},"correct":"b"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":14,"stem":"Melyik cím broadcast?","options":{"a":"255.255.255.255","b":"192.168.1.1","c":"224.0.0.1","d":"0.0.0.0"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":15,"stem":"Mit jelent az \"overload\" kulcsszó a NAT konfigurációban?","options":{"a":"Statikus NAT-ot","b":"Dinamikus NAT-ot","c":"ACL engedélyezést","d":"PAT használatát"},"correct":"d"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":16,"stem":"Melyik a Backbone OSPF terület?","options":{"a":"0","b":"1","c":"10","d":"100"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":17,"stem":"Mi az OSPF hello időzítő alapértelmezett értéke Etherneten?","options":{"a":"5 másodperc","b":"30 másodperc","c":"60 másodperc","d":"10 másodperc"},"correct":"d"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":18,"stem":"Melyik parancs mutatja a jelenlegi konfigurációt?","options":{"a":"show running-config","b":"show startup-config","c":"show ip interface brief","d":"show flash"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":19,"stem":"Hány hosztcímet biztosít a 255.255.255.192 maszk?","options":{"a":"30","b":"64","c":"62","d":"126"},"correct":"c"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":20,"stem":"Mi történik, ha egy switchporton a következő beállítás van:\"switchport mode trunk\" és nincs megadva allowed VLAN lista?","options":{"a":"Minden ismert VLAN forgalmat továbbít a trönkön","b":"Csak VLAN 1-et engedi át","c":"Nem enged át semmit","d":"Csak a natív VLAN-t engedi át"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":21,"stem":"Egy switch root bridge lett. Melyik portállapot NEM fordulhat elő rajta?","options":{"a":"Forwarding","b":"Blocking","c":"Listening","d":"Learning"},"correct":"b"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":22,"stem":"Mit jelent a következő parancs? \"standby 1 priority 120\"","options":{"a":"A router IP címe 192.168.0.120 lesz","b":"A HSRP csoport száma 120","c":"A router ID-je 120","d":"A HSRP csoportban az adott router prioritása 120"},"correct":"d"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":23,"stem":"Mit jelent a \"router ospf 1\" parancs?","options":{"a":"Elindítja az OSPF folyamatot az 1-es process ID-val","b":"Beállítja a router OSPF azonosítóját 1-re","c":"Csak area 1-ben fut OSPF","d":"Az 1-es interfészen indul el OSPF"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":24,"stem":"Mit jelent, ha egy extended ACL szabályban szerepel a \"host\" kulcsszó?","options":{"a":"Bármely IP címre vonatkozik","b":"Csak a hálózati címre vonatkozik","c":"Egyetlen IP címre vonatkozik","d":"Csak a broadcast címre vonatkozik"},"correct":"c"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":25,"stem":"Mi a syslog 0 szint?","options":{"a":"Alert","b":"Critical","c":"Emergency","d":"Debug"},"correct":"c"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":26,"stem":"Mit jelent, ha a \"show ip interface brief\" kimenetben az állapot \"administratively down\"?","options":{"a":"Az interfész le van tiltva shutdown paranccsal","b":"A kábel hibás, vagy nincs csatlakoztatva","c":"Nincs IP cím beállítva","d":"Az interfész hardveresen hibás"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":27,"stem":"Melyik maszk jelenti a /30-at?","options":{"a":"255.255.255.248","b":"255.255.255.240","c":"255.255.255.252","d":"255.255.255.254"},"correct":"c"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":28,"stem":"Hány hoszt használható egy /29 hálózatban?","options":{"a":"6","b":"8","c":"14","d":"30"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":29,"stem":"Hány darab /26-os alhálózat hozható létre egy /24-ből?","options":{"a":"2","b":"4","c":"6","d":"8"},"correct":"b"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":30,"stem":"Melyik protokoll felelős az IPv6 szomszéd felfedezésért?","options":{"a":"ARP","b":"NDP","c":"ICMPv6","d":"STP"},"correct":"b"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":31,"stem":"Mit eredményez a \"standby 1 preempt\" parancs?","options":{"a":"A router átveszi az aktív szerepet, ha magasabb prioritása van","b":"A router mindig standby marad","c":"A router soha nem lesz aktív","d":"A router új csoportot hoz létre"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":32,"stem":"Melyik parancs állítja be manuálisan az OSPF router ID-t?","options":{"a":"ospf id","b":"set routerid","c":"ip router-id","d":"router-id"},"correct":"d"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":33,"stem":"Hová célszerű standard ACL-t alkalmazni?","options":{"a":"Lehetőleg a célhoz közel","b":"Lehetőleg a forráshoz közel","c":"Mindig a trönk portra","d":"Mindig a határ routerre"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":34,"stem":"Melyik parancs mutatja a NAT táblát Cisco routeren?","options":{"a":"show ip nat config","b":"show ip nat translations","c":"show access-lists","d":"show ip route"},"correct":"b"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":35,"stem":"Mi a PPPoE fő felhasználási területe?","options":{"a":"DSL internetkapcsolatok","b":"Mobil adatátvitel","c":"LAN redundancia","d":"DNS kiszolgálás"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":36,"stem":"Mi a különbség a site-to-site és a remote access VPN között?","options":{"a":"Site-to-site titkosított, míg a remote nem","b":"Remote access csak IPv6-ot használ","c":"Site-to-site két hálózatot köt össze, remote access egyéni felhasználót kapcsol","d":"Nincs különbség"},"correct":"c"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":37,"stem":"Melyik SNMP verzió támogat titkosítást és hitelesítést?","options":{"a":"SNMPv3","b":"SNMPv1","c":"SNMPv2","d":"SNMPv2c"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":38,"stem":"Mi az alapértelmezett adminisztratív távolsága a statikus route-nak?","options":{"a":"1","b":"0","c":"90","d":"110"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":39,"stem":"Mit eredményez az \"ipv6 unicast-routing\" hiánya a konfigurációban?","options":{"a":"Csak statikus a forgalomirányítás működik","b":"Nem lehet IPv6 címeket beállítani","c":"Az IPv6 címek törlődnek","d":"Nem történik IPv6 forgalomirányítás"},"correct":"d"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":40,"stem":"Mit jelent a \"ipv6 ospf 1 area 0\" interfész parancs?","options":{"a":"Engedélyezi az OSPFv3-at az adott interfészen area 0-ban","b":"IPv4 OSPF deaktiválása","c":"RIPng aktiválása","d":"Statikus route beállítása"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":41,"stem":"Melyik parancs mutatja a HSRP státuszt?","options":{"a":"show standby","b":"show vrrp","c":"show ip route","d":"show arp"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":42,"stem":"Mit jelent a \"port-security maximum 2\" parancs?","options":{"a":"Legfeljebb 2 VLAN konfigurálható a porton","b":"Legfeljebb 2 IP cím engedélyezett a porton","c":"Legfeljebb 2 MAC cím tanulható meg a porton","d":"Legfeljebb 2 felhasználó csatlakozhat a VPN-hez"},"correct":"c"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":43,"stem":"Mit jelent a \"port-security violation shutdown\" beállítás?","options":{"a":"A port csak warningot ad","b":"A port törli a MAC táblát","c":"A port újraindul","d":"A port letiltódik szabályszegés esetén"},"correct":"d"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":44,"stem":"Melyik parancs kapcsolja ki a Cisco HTTP szervert?","options":{"a":"disable http","b":"ip http shutdown","c":"no service http","d":"no ip http server"},"correct":"d"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":45,"stem":"Mi a wildcard maszk a 255.255.255.240 maszkhoz?","options":{"a":"0.0.0.31","b":"0.0.0.7","c":"0.0.0.15","d":"0.0.0.63"},"correct":"c"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":46,"stem":"Mi történik Cisco forgalomirányítón, ha NAT esetén egy IP cím nincs megadva a hozzáférési listán?","options":{"a":"A forgalom nem kerül lefordításra, az eredeti (belső) IP címmel próbál kimenni","b":"A router automatikusan hozzárendel egy szabad külső IP címet","c":"A forgalom azonnal eldobódik a NAT szabály miatt","d":"A router mindig a saját külső IP címére fordítja"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":47,"stem":"Mi a broadcast címe a 192.168.10.64/26 hálózatnak?","options":{"a":"192.168.10.127","b":"192.168.10.63","c":"192.168.10.255","d":"192.168.10.65"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":48,"stem":"Melyik parancs állítja be a link-local címet manuálisan egy interfészen?","options":{"a":"ipv6 address FE80::1 link-local","b":"ipv6 local FE80::1","c":"ipv6 enable FE80::1","d":"ip address FE80::1/64"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":49,"stem":"Mi a BPDU Guard funkciója?","options":{"a":"Megakadályozza a VLAN trönk létrejöttét","b":"Tiltja a BPDU üzeneteket","c":"Ha BPDU érkezik PortFast porton, az letiltódik","d":"Megakadályozza a hurkok létrejöttét"},"correct":"c"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":50,"stem":"Mi a HSRP alapértelmezett priority értéke?","options":{"a":"0","b":"1","c":"100","d":"255"},"correct":"c"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":51,"stem":"Melyik extended ACL engedi a HTTPS forgalmat?","options":{"a":"access-list 101 permit tcp any any eq 443","b":"access-list 101 permit udp any any eq 443","c":"access-list 101 deny tcp any any eq 80","d":"access-list 101 permit tcp any any eq 80"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":52,"stem":"Mi történik, ha egy ACL végén nincs explicit permit?","options":{"a":"Minden forgalom implicit permit","b":"Minden forgalom implicit deny","c":"Csak ICMP forgalom tiltott","d":"Csak TCP forgalom tiltott"},"correct":"b"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":53,"stem":"Melyik cím típus NEM létezik IPv6-ban?","options":{"a":"Unicast","b":"Multicast","c":"Broadcast","d":"Anycast"},"correct":"c"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":54,"stem":"Mi a legrövidebb összefoglaló prefix a következő hálózatokra: 192.168.8.0/24, 192.168.9.0/24, 192.168.10.0/24, 192.168.11.0/24?","options":{"a":"192.168.8.0/22","b":"192.168.8.0/23","c":"192.168.0.0/16","d":"192.168.8.0/21"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":55,"stem":"Miért nem biztonságos a GRE önmagában?","options":{"a":"Csak IPv4-et támogat","b":"Nincs titkosítás","c":"Csak TCP-t támogat","d":"Teljesen biztonságos"},"correct":"b"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":56,"stem":"Melyik parancs mutatja a kiosztott DHCP IP címeket?","options":{"a":"show ip dhcp binding","b":"show ip dhcp server","c":"show running-config","d":"show arp"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":57,"stem":"Mit konfigurál az \"ip helper-address\" parancs?","options":{"a":"A DHCP pool-t","b":"A DNS szerver címét","c":"Az alapértelmezett átjáró címét","d":"DHCP relay szolgáltatást"},"correct":"d"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":58,"stem":"Mit eredményez a \"spanning-tree portfast default\" parancs?","options":{"a":"Minden access porton alapból engedélyezett a PortFast","b":"Minden trönk portot blokkol","c":"Az STP-t teljesen kikapcsolja","d":"Csak a VLAN 1-ben engedélyezezi az STP-t"},"correct":"a"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":59,"stem":"Mi történik, ha a két oldal különböző protokollt, PAgP-t és LACP-t használ?","options":{"a":"Automatikusan LACP lesz","b":"Automatikusan PAgP lesz","c":"Az EtherChannel nem jön létre","d":"A magasabb prioritással rendelkező eszköz határozza meg"},"correct":"c"},{"section":"II","sectionName":"Hálózatok","subgroup":null,"num":60,"stem":"Melyik titkosítás NEM biztonságos WiFi hálózatban?","options":{"a":"WEP","b":"WPA2","c":"WPA3","d":"802.1X"},"correct":"a"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","num":1,"stem":"Melyik parancs segítségével ellenőrizhető a rendszerfájlok épsége?","options":{"a":"chkdsk /f","b":"diskpart","c":"sfc /scannow","d":"dism /cleanup"},"correct":"c"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","num":2,"stem":"Melyik felelős Windowsban a lemezek titkosításért?","options":{"a":"EFS","b":"TPM","c":"Defender","d":"BitLocker"},"correct":"d"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","num":3,"stem":"Melyik eszközzel hozható létre felhasználói fiók az Active Directory-ban?","options":{"a":"Active Directory Users and Computers","b":"Local Users and Groups","c":"Computer Management","d":"DHCP Manager"},"correct":"a"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","num":4,"stem":"Melyik Windows Server szerepkör szükséges weboldal hosztolásához?","options":{"a":"IIS","b":"DHCP","c":"Apache","d":"Hyper-V"},"correct":"a"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","num":5,"stem":"Mi a SYSVOL mappa szerepe a domain controlleren?","options":{"a":"A rendszer biztonsági mentésének tárolása","b":"Felhasználói profilok tárolása","c":"DNS zónák tárolása","d":"A csoportházirendek és logon script-ek tárolása"},"correct":"d"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","num":6,"stem":"Melyik PowerShell parancs hoz létre új Acitve Directory felhasználót?","options":{"a":"Add-User","b":"Set-ADUser","c":"New-ADUser","d":"Create-User"},"correct":"c"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","num":7,"stem":"Melyik parancs állítja le a Windows-t futtató számítógépet azonnal?","options":{"a":"shutdown /s /t 0","b":"halt","c":"poweroff","d":"init 0"},"correct":"a"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","num":8,"stem":"Melyik szolgáltatás biztosítja a központi frissítések kezelését?","options":{"a":"Windows Update","b":"WDS","c":"WSUS","d":"ADFS"},"correct":"c"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","num":9,"stem":"Melyik szolgáltatás használható felügyelet nélküli telepítésekhez?","options":{"a":"WDS","b":"WSUS","c":"FSRM","d":"ADFS"},"correct":"a"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","num":10,"stem":"Miért fontos a DNS az Active Directory működésében?","options":{"a":"Nem fontos hozzá","b":"Mert ott tárolja a jelszavakat","c":"Mert az AD teljes mértékben a DNS-re támaszkodik","d":"Mert a DHCP helyett használja"},"correct":"c"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","num":11,"stem":"Mi a GPO célja?","options":{"a":"Hálózati jelszavak kezelése","b":"Felhasználók és számítógépek beállításainak központi kezelése","c":"Kizárólag szoftverek automatikus telepítése","d":"Központi címtár megvalósítása"},"correct":"b"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","num":12,"stem":"Mi a különbség a munkacsoport és a tartomány között?","options":{"a":"A tartományban nem kell jelszavakat használni","b":"A munkacsoportban mindig van egy Domian Controller","c":"A munkacsoport decentralizált, a tartomány központilag menedzselt","d":"A munkacsoport nagy rendszerek esetén ajánlott"},"correct":"c"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","num":13,"stem":"Mi a Hyper-V?","options":{"a":"Párhuzamosságot támogató technológia Intel processzorokban","b":"Virtualizációs technológia Windows Server alatt","c":"Titkosítási szolgáltatás","d":"Nyomtatómegosztó szolgáltatás"},"correct":"b"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","num":14,"stem":"Mi az RDP?","options":{"a":"Router Data Path","b":"Redundant Disk Partition","c":"Remote Desktop Protocol","d":"Remote Domain Policy"},"correct":"c"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","num":15,"stem":"Mi a Windows Server Core előnye?","options":{"a":"Csak grafikus felületet tartalmaz","b":"Nem futtatható fizikai gépen, csak virtuálisan","c":"Kevesebb erőforrást használ, kisebb támadási felület","d":"Több RAM-ot képes kezelni"},"correct":"c"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","num":16,"stem":"Az alábbiak közül melyik parancs jeleníti meg a fájl tartalmát oldalanként?","options":{"a":"less","b":"cat","c":"head","d":"nano"},"correct":"a"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","num":17,"stem":"Melyik szolgáltatás futtatja az Apache webszervert?","options":{"a":"httpd","b":"nginx","c":"apache","d":"www"},"correct":"a"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","num":18,"stem":"Melyik konfigurációs fájl tartalmazza az Apache fő beállításait?","options":{"a":"/etc/httpd.conf","b":"/etc/apache/main.conf","c":"/etc/apache2/apache2.conf","d":"/etc/nginx/nginx.conf"},"correct":"c"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","num":19,"stem":"Melyik szolgáltatás felelős fájlmegosztásért Windows felé Linuxon?","options":{"a":"Samba","b":"NFS","c":"DNS","d":"SSH"},"correct":"a"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","num":20,"stem":"Melyik parancs listázza a cron feladatokat?","options":{"a":"cron -list","b":"crontab -l","c":"list-cron","d":"systemctl cron"},"correct":"b"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","num":21,"stem":"Melyik kulcsszó biztosít root jogosultságot ideiglenesen az aktuális parancshoz?","options":{"a":"su","b":"admin","c":"sudo","d":"doasroot"},"correct":"c"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","num":22,"stem":"Melyik virtualizációs technológia telepíthető Linux operációs rendszerre?","options":{"a":"VMware ESXi","b":"KVM","c":"Hyper-V","d":"Virtual PC"},"correct":"b"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","num":23,"stem":"Melyik parancs frissíti az összes csomagot?","options":{"a":"apt upgrade","b":"apt install","c":"apt refresh","d":"apt update"},"correct":"a"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","num":24,"stem":"Melyik parancs kapcsolja be az ufw tűzfalat?","options":{"a":"ufw start","b":"ufw enable","c":"ufw up","d":"systemctl ufw"},"correct":"b"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","num":25,"stem":"Melyik parancs tiltja le a 80-as portot ufw alatt?","options":{"a":"ufw block 80","b":"iptables -D 80","c":"ufw deny 80/tcp","d":"firewall-cmd --remove-port80"},"correct":"c"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","num":26,"stem":"Melyik parancs mutatja az összes betöltött környezeti változót?","options":{"a":"echo $PATH","b":"printenv PATH","c":"set PATH","d":"env"},"correct":"d"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","num":27,"stem":"Melyik fájl állítja be a felhasználó környezeti változóit belépéskor?","options":{"a":"~/.bashrc","b":"/etc/profile","c":"/etc/environment","d":"/etc/shells"},"correct":"a"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","num":28,"stem":"Melyik paranccsal rögzíthető a hálózati forgalom?","options":{"a":"tcpdump","b":"ping -v","c":"netcat","d":"dig"},"correct":"a"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","num":29,"stem":"Melyik parancs mutatja meg a rendszer által tárolt időt Linux alatt?","options":{"a":"time","b":"date","c":"uptime","d":"clock"},"correct":"b"},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","num":30,"stem":"Melyik parancs másolja a nyilvános kulcsot egy távoli szerverre?","options":{"a":"ssh-copy-id user@host","b":"scp id_rsa.pub user@host:/etc/ssh/","c":"cat id_rsa.pub >> ~/.ssh/authorized_keys","d":"ssh -i id_rsa.pub"},"correct":"a"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":1,"stem":"Mi a felhőszolgáltatások egyik legfontosabb előnye?","options":{"a":"Rugalmasság és skálázhatóság","b":"Csak helyileg telepíthető, használható","c":"Mindig olcsóbb","d":"Nincs szükség internetre"},"correct":"a"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":2,"stem":"Melyik NEM felhőszolgáltatási modell?","options":{"a":"IaaS","b":"PaaS","c":"LaaS","d":"SaaS"},"correct":"c"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":3,"stem":"Mi a PaaS lényege?","options":{"a":"Teljes operációs rendszert ad","b":"Csak fájltárolást nyújt","c":"Csak virtualizációt ad","d":"Fejlesztési és futtatási környezet biztosítása"},"correct":"d"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":4,"stem":"Melyik NEM felhő telepítési modell?","options":{"a":"Public Cloud","b":"Desktop Cloud","c":"Private Cloud","d":"Hybrid Cloud"},"correct":"b"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":5,"stem":"Mit jelent a „pay-as-you-go” modell?","options":{"a":"Csak a ténylegesen használt erőforrásokért fizetünk","b":"Havi fix díjat kell fizetni","c":"Egyszeri licencdíj van","d":"Ingyenes minden szolgáltatás"},"correct":"a"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":6,"stem":"Mi a georedundancia?","options":{"a":"Adatok több különálló szerveren való tárolása ugyanabban a datacenterben","b":"Az adatok titkosítása földrajzi metaadatokkal","c":"Adatok több földrajzi helyen való tárolása","d":"Különböző felhőszolgáltatók közötti terheléselosztás"},"correct":"c"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":7,"stem":"Mit jelent a CI/CD?","options":{"a":"Konténerizációs infrastruktúra és cloud deployment","b":"Continuous Inspection / Continuous Debugging","c":"Folyamatos integráció és folyamatos szállítás","d":"Felhőszolgáltatások közötti dinamikus konfiguráció"},"correct":"c"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":8,"stem":"Mi a Kubernetes fő feladata?","options":{"a":"Virtuális gépek erőforrásainak központi allokálása","b":"Mikroszervizek közötti hálózati titkosítás biztosítása","c":"Alkalmazások verziókövetése és kódrepository kezelése","d":"Konténerek ütemezése és menedzselése"},"correct":"d"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":9,"stem":"Mi a Zero Trust modell lényege?","options":{"a":"Senki sem megbízható alapértelmezésben","b":"Csak a belső hálózat felhasználói kapnak automatikus bizalmat","c":"Minden erőforráshoz egyszeri hitelesítés elegendő","d":"A titkosítás megléte garantálja a teljes biztonságot"},"correct":"a"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":10,"stem":"Mi a Microsoft Azure Virtual Machines fő szerepe?","options":{"a":"Tárhely szolgáltatás","b":"DNS szolgáltatás","c":"Virtuális gépek futtatása","d":"CDN szolgáltatás"},"correct":"c"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":11,"stem":"Mi a Google App Engine funkciója?","options":{"a":"Webalkalmazások futtatása","b":"Tárhely szolgáltatás","c":"DNS szolgáltatás","d":"VPN szolgáltatás"},"correct":"a"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":12,"stem":"Mire használhatóak a konténerek?","options":{"a":"VPN működtetésére","b":"Fájlok titkosítására","c":"DNS szolgáltatásra","d":"Alkalmazások könnyű csomagolására és hordozására"},"correct":"d"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":13,"stem":"Mit jelent a vertical scaling?","options":{"a":"Újabb szerverek hozzáadása a rendszerhez azonos feladatokra","b":"Alkalmazások elosztása különböző földrajzi régiók között a teljesítmény javítására","c":"Erőforrások növelése egyetlen szerveren","d":"Külön hálózati szegmensek létrehozása a terhelés csökkentése érdekében"},"correct":"c"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":14,"stem":"Mi a multi-region deployment előnye?","options":{"a":"Felhasználói adatok automatikus titkosítása minden régióban","b":"Minden alkalmazás teljesítményének garantált növekedése automatikusan","c":"Az alkalmazások frissítéseinek ritkábbá tétele","d":"Jobb rendelkezésre állás és hibatűrés"},"correct":"d"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":15,"stem":"Mit jelent a felhőalapú költségoptimalizálás?","options":{"a":"Erőforrások túlméretezése a jövőbeni igények biztosítására","b":"Erőforrások méretezése a valós használathoz","c":"Szolgáltatások előfizetésének növelése a redundancia érdekében","d":"Alkalmazások automatikus migrálása drágább régiókba a teljesítmény érdekében"},"correct":"b"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":16,"stem":"Mi az Azure SQL Database?","options":{"a":"Virtuális gépen futtatott önálló SQL Server példány","b":"Felhőben elérhető NoSQL alapú adatbázis","c":"Felhőben elérhető relációs adatbázis-szolgáltatás","d":"Adattárház megoldás kifejezetten analitikai feldolgozásra"},"correct":"c"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":17,"stem":"Mi a CDN?","options":{"a":"Content Delivery Network, amely gyorsítótárakat használva közelebb viszi a tartalmat a felhasználókhoz","b":"Hálózati protokoll, amely titkosítja a kommunikációt a böngésző és a szerver között","c":"Adatbázis-replikációra szolgáló felhőszolgáltatás","d":"Központi DNS-rendszer, amely automatikusan irányítja a forgalmat a legközelebbi névszerverhez"},"correct":"a"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":18,"stem":"Mit jelent az IoT (Internet of Things)?","options":{"a":"Kizárólag szenzoradatok gyűjtését és tárolását helyi adatbázisban","b":"Felhőalapú alkalmazások fejlesztési platformját webes környezetben","c":"Eszközök hálózatba kapcsolását és adatcseréjét az interneten keresztül","d":"Hagyományos számítógépek és szerverek közötti internetes kommunikációt"},"correct":"c"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":19,"stem":"Melyik protokollt használják gyakran IoT üzenetküldésre?","options":{"a":"IMAP","b":"SNMP","c":"MQTT","d":"FTP"},"correct":"c"},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"num":20,"stem":"Mire használják az IoT-ban a felhőszolgáltatásokat?","options":{"a":"Kizárólag eszközök firmware-frissítésére","b":"Valós idejű hálózati forgalom útvonalválasztására az eszközök között","c":"Eszközök közötti közvetlen Bluetooth kommunikáció biztosítására","d":"Adatok tárolására és feldolgozására"},"correct":"d"}];
+  var EXTRA_QUESTIONS = [{"section":"I","sectionName":"Alapismeretek","subgroup":null,"stem":"Melyik tárolóeszköz felejtő (volatile), azaz kikapcsoláskor elveszti tartalmát?","options":{"a":"SSD","b":"HDD","c":"RAM","d":"Pendrive"},"correct":"c","num":"E1","extra":true},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"stem":"Hány bit egy bájt?","options":{"a":"4","b":"8","c":"16","d":"32"},"correct":"b","num":"E2","extra":true},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"stem":"Melyik port az SSH alapértelmezett portja?","options":{"a":"21","b":"22","c":"23","d":"25"},"correct":"b","num":"E3","extra":true},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"stem":"Melyik protokoll szolgál e-mail küldésre?","options":{"a":"POP3","b":"IMAP","c":"SMTP","d":"FTP"},"correct":"c","num":"E4","extra":true},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"stem":"Mi a RAID 1 fő célja?","options":{"a":"Sebességnövelés csíkozással","b":"Tükrözés, adatbiztonság","c":"Paritásbit tárolás","d":"Tömörítés"},"correct":"b","num":"E5","extra":true},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"stem":"Melyik fájlrendszert használja alapból a modern Windows?","options":{"a":"FAT32","b":"ext4","c":"NTFS","d":"APFS"},"correct":"c","num":"E6","extra":true},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"stem":"Mit jelent a \"malware\" kifejezés?","options":{"a":"Hardveres hiba","b":"Rosszindulatú szoftver","c":"Memóriamodul","d":"Hálózati kábel"},"correct":"b","num":"E7","extra":true},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"stem":"Melyik tápegység formafaktor a legelterjedtebb asztali gépekben?","options":{"a":"SFX","b":"ATX","c":"TFX","d":"Flex ATX"},"correct":"b","num":"E8","extra":true},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"stem":"Mi a firmware?","options":{"a":"A hardverbe épített, alacsony szintű vezérlőszoftver","b":"Egy vírusirtó program","c":"Egy webböngésző","d":"Egy hálózati protokoll"},"correct":"a","num":"E9","extra":true},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"stem":"Melyik mértékegység méri a processzor működési sebességét?","options":{"a":"Watt","b":"Hertz","c":"Bit/s","d":"Volt"},"correct":"b","num":"E10","extra":true},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"stem":"Mit jelent a \"social engineering\" a biztonságtechnikában?","options":{"a":"Hálózati eszközök tervezése","b":"Emberi megtévesztésen alapuló támadás","c":"Szoftverfejlesztési módszer","d":"Adatbázis-tervezés"},"correct":"b","num":"E11","extra":true},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"stem":"Melyik felhő-szolgáltatási modellben kezeli a felhasználó a legtöbb rendszerelemet saját maga?","options":{"a":"SaaS","b":"PaaS","c":"IaaS","d":"FaaS"},"correct":"c","num":"E12","extra":true},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"stem":"Mi a VPN fő célja?","options":{"a":"Nyilvános IP-cím kiosztása","b":"Biztonságos, titkosított kapcsolat nyilvános hálózaton keresztül","c":"Weboldalak gyorsítótárazása","d":"Lemez particionálása"},"correct":"b","num":"E13","extra":true},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"stem":"Melyik képformátum tömörítése veszteséges?","options":{"a":"PNG","b":"BMP","c":"JPEG","d":"GIF"},"correct":"c","num":"E14","extra":true},{"section":"I","sectionName":"Alapismeretek","subgroup":null,"stem":"Mi a \"backup\" magyar megfelelője az informatikában?","options":{"a":"Frissítés","b":"Biztonsági mentés","c":"Particionálás","d":"Tömörítés"},"correct":"b","num":"E15","extra":true},{"section":"II","sectionName":"Hálózatok","subgroup":null,"stem":"Hány rétege van az OSI modellnek?","options":{"a":"4","b":"5","c":"6","d":"7"},"correct":"d","num":"E16","extra":true},{"section":"II","sectionName":"Hálózatok","subgroup":null,"stem":"Melyik OSI réteg felelős az útválasztásért?","options":{"a":"Fizikai","b":"Adatkapcsolati","c":"Hálózati","d":"Szállítási"},"correct":"c","num":"E17","extra":true},{"section":"II","sectionName":"Hálózatok","subgroup":null,"stem":"Melyik protokoll fordítja le a domain neveket IP-címekre?","options":{"a":"DHCP","b":"DNS","c":"ARP","d":"SNMP"},"correct":"b","num":"E18","extra":true},{"section":"II","sectionName":"Hálózatok","subgroup":null,"stem":"Hány hosztcím érhető el egy /28-as alhálózatban?","options":{"a":"14","b":"30","c":"62","d":"6"},"correct":"a","num":"E19","extra":true},{"section":"II","sectionName":"Hálózatok","subgroup":null,"stem":"Melyik OSI rétegben működik a TCP protokoll?","options":{"a":"Hálózati","b":"Szállítási","c":"Adatkapcsolati","d":"Alkalmazási"},"correct":"b","num":"E20","extra":true},{"section":"II","sectionName":"Hálózatok","subgroup":null,"stem":"Mi az ARP feladata?","options":{"a":"IP-cím MAC-címre fordítása","b":"Domain nevek feloldása","c":"Útválasztás","d":"Portok kezelése"},"correct":"a","num":"E21","extra":true},{"section":"II","sectionName":"Hálózatok","subgroup":null,"stem":"Melyik az alapértelmezett (natív) VLAN Cisco switcheken?","options":{"a":"VLAN 0","b":"VLAN 1","c":"VLAN 10","d":"VLAN 99"},"correct":"b","num":"E22","extra":true},{"section":"II","sectionName":"Hálózatok","subgroup":null,"stem":"Mi a full duplex kommunikáció jellemzője?","options":{"a":"Csak egy irányban továbbít adatot egyszerre","b":"Egyidejűleg mindkét irányban továbbít adatot","c":"Csak vezeték nélküli hálózatokon működik","d":"Csak fél sebességgel működik"},"correct":"b","num":"E23","extra":true},{"section":"II","sectionName":"Hálózatok","subgroup":null,"stem":"Melyik kábeltípus alkalmas a leghosszabb távolság áthidalására jelismétlő nélkül?","options":{"a":"UTP réz kábel","b":"Koaxiális kábel","c":"Optikai szálas kábel","d":"Telefonkábel"},"correct":"c","num":"E24","extra":true},{"section":"II","sectionName":"Hálózatok","subgroup":null,"stem":"Mi a \"default gateway\" szerepe?","options":{"a":"IP-címeket oszt ki automatikusan","b":"A helyi hálózaton kívüli forgalmat továbbítja","c":"Fájlokat oszt meg","d":"Domain neveket tárol"},"correct":"b","num":"E25","extra":true},{"section":"II","sectionName":"Hálózatok","subgroup":null,"stem":"Melyik protokoll biztosít titkosított távoli terminálelérést?","options":{"a":"Telnet","b":"SSH","c":"FTP","d":"HTTP"},"correct":"b","num":"E26","extra":true},{"section":"II","sectionName":"Hálózatok","subgroup":null,"stem":"Mit jelent a \"subnetting\"?","options":{"a":"Egy nagy hálózat több kisebb alhálózatra bontása","b":"Két hálózat összekapcsolása","c":"IP-címek titkosítása","d":"Vezeték nélküli jelerősítés"},"correct":"a","num":"E27","extra":true},{"section":"II","sectionName":"Hálózatok","subgroup":null,"stem":"Melyik eszköz működik alapvetően az OSI modell 2. (adatkapcsolati) rétegében?","options":{"a":"Router","b":"Switch","c":"Tűzfal","d":"Modem"},"correct":"b","num":"E28","extra":true},{"section":"II","sectionName":"Hálózatok","subgroup":null,"stem":"Mi a QoS (Quality of Service) célja hálózatokban?","options":{"a":"Az IP-címzés egyszerűsítése","b":"A hálózati forgalom priorizálása","c":"A jelszavak titkosítása","d":"A kábelezés szabványosítása"},"correct":"b","num":"E29","extra":true},{"section":"II","sectionName":"Hálózatok","subgroup":null,"stem":"Melyik port száma a HTTP protokollnak?","options":{"a":"21","b":"25","c":"80","d":"443"},"correct":"c","num":"E30","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","stem":"Melyik paranccsal listázhatók a futó folyamatok Windows parancssorban?","options":{"a":"ps","b":"tasklist","c":"ls","d":"top"},"correct":"b","num":"E31","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","stem":"Mi a Windows Feladatütemező (Task Scheduler) fő funkciója?","options":{"a":"Lemezkarbantartás","b":"Feladatok automatikus, ütemezett futtatása","c":"Felhasználók kezelése","d":"Hálózati beállítások módosítása"},"correct":"b","num":"E32","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","stem":"Melyik eszközzel készíthető rendszer-visszaállítási pont Windows alatt?","options":{"a":"Lemezkezelés","b":"Feladatkezelő","c":"Rendszer-visszaállítás (System Restore)","d":"Regisztum szerkesztő"},"correct":"c","num":"E33","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","stem":"Mi a Windows Regisztum (Registry) szerepe?","options":{"a":"A telepített programok konfigurációs beállításait tárolja","b":"A merevlemez particionálását végzi","c":"A hálózati forgalmat titkosítja","d":"A felhasználói jelszavakat olvashatóan listázza"},"correct":"a","num":"E34","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","stem":"Melyik PowerShell parancs listázza a szolgáltatásokat?","options":{"a":"Get-Process","b":"Get-Service","c":"List-Service","d":"Show-Services"},"correct":"b","num":"E35","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","stem":"Mi a célja Windows Server esetén a Failover Clustering szolgáltatásnak?","options":{"a":"Nagy rendelkezésre állás biztosítása több szerver között","b":"Felhasználók automatikus létrehozása","c":"Lemeztitkosítás","d":"Nyomtatók megosztása"},"correct":"a","num":"E36","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","stem":"Melyik szerepkör szükséges Windows Serveren hálózati mappamegosztáshoz?","options":{"a":"Fájlkiszolgáló (File Server)","b":"DHCP kiszolgáló","c":"DNS kiszolgáló","d":"Feladatütemező"},"correct":"a","num":"E37","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","stem":"Mi a célja a Windows Server Update Services (WSUS) eszköznek?","options":{"a":"Vírusirtás","b":"Frissítések központi terjesztése a hálózaton","c":"Felhasználói fiókok törlése","d":"Lemezpartíciók kezelése"},"correct":"b","num":"E38","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","stem":"Melyik az alapértelmezett fájlmegosztási protokoll Windows hálózatokon?","options":{"a":"NFS","b":"SMB","c":"FTP","d":"AFP"},"correct":"b","num":"E39","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Windows","stem":"Mi történik, ha egy Active Directory felhasználói fiókot letiltunk (disable) törlés helyett?","options":{"a":"A fiók és adatai megmaradnak, de nem lehet vele bejelentkezni","b":"A fiók azonnal törlődik","c":"A jelszó automatikusan megváltozik","d":"A fiók adminisztrátori jogot kap"},"correct":"a","num":"E40","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","stem":"Melyik parancs jeleníti meg az aktuális könyvtár elérési útját?","options":{"a":"cd","b":"pwd","c":"ls","d":"dir"},"correct":"b","num":"E41","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","stem":"Melyik paranccsal hozható létre új könyvtár Linuxban?","options":{"a":"touch","b":"mkdir","c":"newdir","d":"mkfile"},"correct":"b","num":"E42","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","stem":"Melyik parancs másolja a fájlokat Linuxban?","options":{"a":"mv","b":"cp","c":"copy","d":"dupl"},"correct":"b","num":"E43","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","stem":"Mi a chmod 755 jelentése egy fájlon?","options":{"a":"Tulajdonos: olvas/ír/futtat, csoport és mások: olvas/futtat","b":"Mindenki teljes hozzáférést kap","c":"Csak a tulajdonos férhet hozzá","d":"A fájl írásvédett mindenki számára"},"correct":"a","num":"E44","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","stem":"Melyik parancs mutatja a szabad és foglalt lemezterületet Linuxban?","options":{"a":"du","b":"df","c":"free","d":"top"},"correct":"b","num":"E45","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","stem":"Melyik parancs jeleníti meg a memóriahasználatot Linuxban?","options":{"a":"free","b":"df","c":"ps","d":"who"},"correct":"a","num":"E46","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","stem":"Melyik systemctl parancs engedélyezi egy egység indítását rendszerindításkor?","options":{"a":"systemctl start","b":"systemctl enable","c":"systemctl status","d":"systemctl restart"},"correct":"b","num":"E47","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","stem":"Melyik fájl tartalmazza a felhasználói fiókok alapadatait Linuxban?","options":{"a":"/etc/shadow","b":"/etc/passwd","c":"/etc/group","d":"/etc/hosts"},"correct":"b","num":"E48","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","stem":"Melyik fájl tárolja titkosítva a felhasználói jelszavakat Linuxban?","options":{"a":"/etc/passwd","b":"/etc/shadow","c":"/etc/secure","d":"/etc/login.defs"},"correct":"b","num":"E49","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","stem":"Melyik parancs jeleníti meg a hálózati interfészek IP-címeit modern Linux disztribúciókon?","options":{"a":"ifconfig","b":"ip addr","c":"netstat","d":"route"},"correct":"b","num":"E50","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","stem":"Melyik parancs hoz létre szimbolikus linket?","options":{"a":"ln -s","b":"link","c":"cp -l","d":"sym"},"correct":"a","num":"E51","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","stem":"Melyik parancs küld szignált (pl. leállítást) egy folyamatnak PID alapján?","options":{"a":"stop","b":"kill","c":"end","d":"halt"},"correct":"b","num":"E52","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","stem":"Mi a \"swap\" partíció szerepe Linuxban?","options":{"a":"Ideiglenes fájlok tárolása","b":"A RAM kiegészítése lemezterülettel, amikor elfogy a memória","c":"A rendszerindító betöltése","d":"A naplófájlok tárolása"},"correct":"b","num":"E53","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","stem":"Melyik paranccsal telepíthető csomag Debian/Ubuntu rendszeren?","options":{"a":"yum install","b":"apt install","c":"pkg add","d":"dnf install"},"correct":"b","num":"E54","extra":true},{"section":"III","sectionName":"Hálózati operációs rendszerek","subgroup":"Linux","stem":"Melyik könyvtár tartalmazza alapértelmezetten a felhasználók saját home könyvtárait?","options":{"a":"/usr","b":"/home","c":"/var","d":"/opt"},"correct":"b","num":"E55","extra":true},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"stem":"Mi a SaaS lényege?","options":{"a":"Infrastruktúra bérlése","b":"Kész, azonnal használható alkalmazás elérése interneten keresztül","c":"Fejlesztői platform biztosítása","d":"Hálózati eszközök bérlése"},"correct":"b","num":"E56","extra":true},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"stem":"Melyik AWS szolgáltatás szolgál objektumtárolásra?","options":{"a":"EC2","b":"S3","c":"RDS","d":"IAM"},"correct":"b","num":"E57","extra":true},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"stem":"Mi az autoscaling (automatikus skálázás) célja felhőkörnyezetben?","options":{"a":"Az erőforrások automatikus igazítása a terheléshez","b":"A jelszavak automatikus cseréje","c":"A számlázás egyszerűsítése","d":"A biztonsági mentések automatizálása"},"correct":"a","num":"E58","extra":true},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"stem":"Melyik fogalom jelöli, amikor egy megoldás több felhőszolgáltatót is használ egyszerre?","options":{"a":"Hybrid cloud","b":"Multi-cloud","c":"Private cloud","d":"Edge computing"},"correct":"b","num":"E59","extra":true},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"stem":"Mi a load balancer (terheléselosztó) fő feladata?","options":{"a":"A bejövő forgalmat több szerver között osztja el","b":"Titkosítja az adatokat","c":"DNS-t szolgáltat","d":"Tárolja a naplófájlokat"},"correct":"a","num":"E60","extra":true},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"stem":"Melyik felhő-üzemeltetési modell esetén osztja meg egy szervezet az infrastruktúrát a nyilvánossággal?","options":{"a":"Private cloud","b":"Public cloud","c":"Community cloud","d":"On-premise"},"correct":"b","num":"E61","extra":true},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"stem":"Mi a serverless (kiszolgáló nélküli) számítás lényege?","options":{"a":"A fejlesztő nem foglalkozik a szerverek kezelésével, a felhő automatikusan biztosítja az erőforrásokat","b":"Nincs szükség internetkapcsolatra","c":"A kód csak helyi gépen fut","d":"Nincsenek adatközpontok"},"correct":"a","num":"E62","extra":true},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"stem":"Melyik AWS szolgáltatás felel a felhasználók és jogosultságok kezeléséért?","options":{"a":"S3","b":"IAM","c":"EC2","d":"Route 53"},"correct":"b","num":"E63","extra":true},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"stem":"Mi a \"disaster recovery\" (katasztrófa utáni helyreállítás) célja?","options":{"a":"A rendszerek és adatok helyreállítása egy váratlan esemény után","b":"A jelszavak rendszeres cseréje","c":"A hálózati sebesség növelése","d":"A licencköltségek csökkentése"},"correct":"a","num":"E64","extra":true},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"stem":"Melyik AWS S3 tárolási osztály olcsóbb, de lassabb hozzáférést biztosít?","options":{"a":"S3 Standard","b":"S3 Glacier","c":"S3 Intelligent-Tiering","d":"S3 Express One Zone"},"correct":"b","num":"E65","extra":true},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"stem":"Mi az API (Application Programming Interface) szerepe felhőszolgáltatásoknál?","options":{"a":"Szabványosított módot biztosít a szolgáltatások programozott elérésére","b":"Grafikus felhasználói felület","c":"Hálózati kábelezés","d":"Biztonsági mentés"},"correct":"a","num":"E66","extra":true},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"stem":"Melyik fogalom jelenti a felhőerőforrások kódból történő, deklaratív létrehozását és kezelését?","options":{"a":"Infrastructure as Code","b":"Software as a Service","c":"Platform as a Service","d":"Network as a Service"},"correct":"a","num":"E67","extra":true},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"stem":"Mi a \"vertical scaling\" (skálázás felfelé) egyik jellemző hátránya?","options":{"a":"Nincs felső korlátja","b":"Egy adott ponton túl fizikai/technikai korlátokba ütközik egyetlen gépen","c":"Mindig olcsóbb, mint a horizontális skálázás","d":"Nem igényel újraindítást soha"},"correct":"b","num":"E68","extra":true},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"stem":"Melyik AWS szolgáltatás biztosít felügyelt relációs adatbázist?","options":{"a":"DynamoDB","b":"RDS","c":"S3","d":"Lambda"},"correct":"b","num":"E69","extra":true},{"section":"IV","sectionName":"Felhőszolgáltatások","subgroup":null,"stem":"Az \"uptime\" (rendelkezésre állás) mutatót jellemzően milyen formában adják meg?","options":{"a":"Megabit/másodperc","b":"Százalékos érték (pl. 99,9%)","c":"Milliszekundum","d":"Gigabájt"},"correct":"b","num":"E70","extra":true}];
+
+  var SECTION_META = {
+    'I':   { name:'Alapismeretek', total:40, points:80 },
+    'II':  { name:'Hálózatok', total:60, points:120 },
+    'III-Windows': { name:'Hálózati OS – Windows', total:15, points:30 },
+    'III-Linux':   { name:'Hálózati OS – Linux', total:15, points:30 },
+    'IV':  { name:'Felhőszolgáltatások', total:20, points:40 }
+  };
+
+  function filterKey(q){
+    if(q.section === 'III') return 'III-' + q.subgroup;
+    return q.section;
+  }
+
+  // ---------- state ----------
+  var state = {
+    screen: 'setup',
+    mode: 'practice',
+    selected: { 'I':true, 'II':true, 'III-Windows':true, 'III-Linux':true, 'IV':true },
+    limit: 20,
+    shuffle: true,
+    pool: [],
+    idx: 0,
+    answers: {}, // num-key -> {chosen, correct, isCorrect}
+    timerId: null,
+    secondsLeft: 0,
+    includeExtra: false
+  };
+
+  function qKey(q){ return q.section + '-' + q.num; }
+
+  function getReviewTopic(q) {
+    var text = (q.stem + ' ' + JSON.stringify(q.options)).toLowerCase();
+    var topic = q.sectionName;
+    var file = 'alapismeretek.pdf'; // default
+
+    if(text.indexOf('vlan')!==-1) topic = 'VLAN hálózatok';
+    else if(text.indexOf('ospf')!==-1) topic = 'OSPF protokoll és irányítás';
+    else if(text.indexOf('dhcp')!==-1) topic = 'DHCP szolgáltatás';
+    else if(text.indexOf('dns')!==-1) topic = 'DNS névfeloldás';
+    else if(text.indexOf('ip cím')!==-1 || text.indexOf('ipv4')!==-1 || text.indexOf('maszk')!==-1 || text.indexOf('hostcím')!==-1) topic = 'IPv4 címzés és alhálózatok';
+    else if(text.indexOf('ipv6')!==-1) topic = 'IPv6 címzés';
+    else if(text.indexOf('nat')!==-1 || text.indexOf('pat')!==-1) topic = 'NAT és PAT (Hálózati címfordítás)';
+    else if(text.indexOf('acl')!==-1 || text.indexOf('access-list')!==-1) topic = 'ACL (Hozzáférési listák)';
+    else if(text.indexOf('stp')!==-1 || text.indexOf('spanning-tree')!==-1) topic = 'STP (Feszítőfa protokoll)';
+    else if(text.indexOf('hsrp')!==-1 || text.indexOf('standby')!==-1) topic = 'HSRP redundancia';
+    else if(text.indexOf('windows server')!==-1 || text.indexOf('active directory')!==-1 || text.indexOf('gpo')!==-1) topic = 'Windows Server és Active Directory';
+    else if(text.indexOf('linux')!==-1 || text.indexOf('bash')!==-1 || text.indexOf('parancs')!==-1) topic = 'Linux parancssor és adminisztráció';
+    else if(text.indexOf('felhő')!==-1 || text.indexOf('iaas')!==-1 || text.indexOf('paas')!==-1 || text.indexOf('saas')!==-1) topic = 'Felhőszolgáltatások alapjai';
+    else if(text.indexOf('docker')!==-1 || text.indexOf('konténer')!==-1 || text.indexOf('kubernetes')!==-1) topic = 'Konténerizáció és Kubernetes';
+    else if(text.indexOf('számítógép')!==-1 || text.indexOf('memória')!==-1 || text.indexOf('alaplap')!==-1 || text.indexOf('tápegység')!==-1) topic = 'Számítógép hardver ismeretek';
+    else if(q.section === 'I') topic = 'Informatikai és hálózati alapfogalmak';
+    else if(q.section === 'II') topic = 'Hálózati eszközök és konfiguráció';
+    else if(q.section === 'III' && q.subgroup === 'Windows') topic = 'Windows szerver üzemeltetés';
+    else if(q.section === 'III' && q.subgroup === 'Linux') topic = 'Linux szerver üzemeltetés';
+    else if(q.section === 'IV') topic = 'Felhőszolgáltatások';
+
+    // Map topics to specific PDFs (you can copy the PDFs to the Gyakorló folder with these names)
+    if(q.section === 'II' || topic.indexOf('VLAN')!==-1 || topic.indexOf('OSPF')!==-1 || topic.indexOf('IPv4')!==-1 || topic.indexOf('IPv6')!==-1 || topic.indexOf('NAT')!==-1 || topic.indexOf('ACL')!==-1 || topic.indexOf('STP')!==-1 || topic.indexOf('HSRP')!==-1 || topic.indexOf('DHCP')!==-1 || topic.indexOf('DNS')!==-1) file = 'halozatok.pdf';
+    if(q.section === 'III' && q.subgroup === 'Windows' || topic.indexOf('Windows')!==-1) file = 'windows.pdf';
+    if(q.section === 'III' && q.subgroup === 'Linux' || topic.indexOf('Linux')!==-1) file = 'linux.pdf';
+    if(q.section === 'IV' || topic.indexOf('Felhő')!==-1 || topic.indexOf('Konténer')!==-1) file = 'felho.pdf';
+
+    return { topic: topic, file: 'anyagok/' + file };
+  }
+
+  // ---------- setup screen ----------
+  var chipGrid = document.getElementById('chipGrid');
+  Object.keys(SECTION_META).forEach(function(key){
+    var m = SECTION_META[key];
+    var div = document.createElement('label');
+    div.className = 'chip on';
+    div.dataset.key = key;
+    div.innerHTML = '<input type="checkbox" checked>' +
+      '<span class="chip-label">' + labelFor(key) + '</span>' +
+      '<span class="chip-meta">' + m.total + ' kérdés &middot; ' + m.points + ' pont</span>';
+    chipGrid.appendChild(div);
+    div.querySelector('input').addEventListener('change', function(e){
+      state.selected[key] = e.target.checked;
+      div.classList.toggle('on', e.target.checked);
+      updateSetupSummary();
+    });
+  });
+
+  function labelFor(key){
+    if(key === 'I') return 'I. Alapismeretek';
+    if(key === 'II') return 'II. Hálózatok';
+    if(key === 'III-Windows') return 'III. Hálózati operációs rendszerek – Windows kérdések';
+    if(key === 'III-Linux') return 'III. Hálózati operációs rendszerek – Linux kérdések';
+    if(key === 'IV') return 'IV. Felhőszolgáltatások';
+    return key;
+  }
+
+  document.querySelectorAll('.preset-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var preset = btn.dataset.preset;
+      var all = preset === 'all';
+      Object.keys(SECTION_META).forEach(function(key){
+        var on = all || key === 'III-Linux' || key === 'IV';
+        state.selected[key] = on;
+      });
+      document.querySelectorAll('.chip').forEach(function(chip){
+        var key = chip.dataset.key;
+        var on = state.selected[key];
+        chip.classList.toggle('on', on);
+        chip.querySelector('input').checked = on;
+      });
+      updateSetupSummary();
+    });
+  });
+
+  document.querySelectorAll('.mode-opt').forEach(function(opt){
+    opt.addEventListener('click', function(){
+      if(opt.parentElement.id === 'modeToggle'){
+        document.querySelectorAll('#modeToggle .mode-opt').forEach(function(o){ o.classList.remove('on'); });
+        opt.classList.add('on');
+        state.mode = opt.dataset.mode;
+        updateSetupSummary();
+      } else if (opt.parentElement.id === 'limitToggle') {
+        document.querySelectorAll('#limitToggle .mode-opt').forEach(function(o){ o.classList.remove('on'); });
+        opt.classList.add('on');
+        state.limit = parseInt(opt.dataset.limit, 10);
+        updateSetupSummary();
+      }
+    });
+  });
+
+  document.getElementById('shuffleToggle').addEventListener('change', function(e){
+    state.shuffle = e.target.checked;
+  });
+
+  // ---------- Static extra question bank (no account/cost needed) ----------
+  document.getElementById('extraToggle').addEventListener('change', function(e){
+    state.includeExtra = e.target.checked;
+    updateSetupSummary();
+  });
+
+  function currentSelectionStats(){
+    var count = 0, points = 0;
+    Object.keys(state.selected).forEach(function(key){
+      if(state.selected[key]){
+        count += SECTION_META[key].total;
+        points += SECTION_META[key].points;
+      }
+    });
+    if(state.includeExtra){
+      EXTRA_QUESTIONS.forEach(function(q){
+        if(state.selected[filterKey(q)]){ count++; points += 2; }
+      });
+    }
+    if (state.limit > 0 && count > state.limit) {
+      count = state.limit;
+      points = count * 2;
+    }
+    return { count: count, points: points };
+  }
+
+  function updateSetupSummary(){
+    var s = currentSelectionStats();
+    document.getElementById('selCountLabel').textContent = s.count + ' kérdés kiválasztva';
+    var modeTxt = state.mode === 'practice' ? 'Gyakorlás (azonnali visszajelzéssel)' : 'Verseny szimuláció (időzítővel)';
+    var summary = document.getElementById('startSummary');
+    var startBtn = document.getElementById('startBtn');
+    if(s.count === 0){
+      summary.textContent = 'Válassz ki legalább egy témakört.';
+      startBtn.disabled = true;
+    } else {
+      summary.innerHTML = modeTxt + ' &middot; <b>' + s.count + '</b> kérdés &middot; <b>' + s.points + '</b> pont';
+      startBtn.disabled = false;
+    }
+  }
+  updateSetupSummary();
+
+  document.getElementById('startBtn').addEventListener('click', startQuiz);
+
+  // ---------- history (localStorage) ----------
+  function loadHistory(){
+    try{
+      var raw = localStorage.getItem('osztv_history');
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){ return []; }
+  }
+  function saveHistoryEntry(entry){
+    try{
+      var hist = loadHistory();
+      hist.unshift(entry);
+      hist = hist.slice(0, 12);
+      localStorage.setItem('osztv_history', JSON.stringify(hist));
+    }catch(e){}
+  }
+  function renderHistory(){
+    var hist = loadHistory();
+    var block = document.getElementById('historyBlock');
+    if(!hist.length){ block.hidden = true; return; }
+    block.hidden = false;
+    var body = document.getElementById('historyBody');
+    body.innerHTML = '';
+    hist.forEach(function(h){
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + h.date + '</td><td>' + h.mode + '</td><td>' + h.scope + '</td><td>' + h.score + ' / ' + h.max + ' (' + h.pct + '%)</td>';
+      body.appendChild(tr);
+    });
+  }
+  renderHistory();
+
+  // ---------- quiz flow ----------
+  function shuffleArr(arr){
+    for(var i = arr.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  }
+
+  function startQuiz(){
+    state.pool = QUESTIONS.filter(function(q){ return state.selected[filterKey(q)]; });
+    if(state.includeExtra){
+      state.pool = state.pool.concat(EXTRA_QUESTIONS.filter(function(q){ return state.selected[filterKey(q)]; }));
+    }
+    if(state.shuffle) shuffleArr(state.pool);
+    
+    if(state.limit > 0 && state.limit < state.pool.length) {
+      state.pool = state.pool.slice(0, state.limit);
+    }
+    
+    state.idx = 0;
+    state.answers = {};
+    switchScreen('quiz');
+
+    document.getElementById('quizModeLabel').textContent = state.mode === 'practice' ? 'Gyakorlás' : 'Verseny szimuláció';
+    var isExam = state.mode === 'exam';
+    document.getElementById('examNav').hidden = !isExam;
+    document.getElementById('finishBtn').hidden = !isExam;
+    document.getElementById('nextBtn').hidden = isExam;
+    document.getElementById('timerBox').hidden = !isExam;
+
+    if(isExam){
+      buildExamNav();
+      var stats = currentSelectionStats();
+      state.secondsLeft = Math.max(60, Math.round(180 * 60 * (stats.points / 300)));
+      startTimer();
+    } else {
+      stopTimer();
+    }
+    renderQuestion();
+  }
+
+  function buildExamNav(){
+    var nav = document.getElementById('examNav');
+    nav.innerHTML = '';
+    state.pool.forEach(function(q, i){
+      var d = document.createElement('div');
+      d.className = 'qdot mono';
+      d.textContent = (i+1);
+      d.addEventListener('click', function(){ state.idx = i; renderQuestion(); });
+      nav.appendChild(d);
+    });
+  }
+
+  function startTimer(){
+    stopTimer();
+    updateTimerDisplay();
+    state.timerId = setInterval(function(){
+      state.secondsLeft--;
+      updateTimerDisplay();
+      if(state.secondsLeft <= 0){
+        stopTimer();
+        finishQuiz();
+      }
+    }, 1000);
+  }
+  function stopTimer(){
+    if(state.timerId){ clearInterval(state.timerId); state.timerId = null; }
+  }
+  function updateTimerDisplay(){
+    var box = document.getElementById('timerBox');
+    var m = Math.floor(state.secondsLeft / 60);
+    var s = state.secondsLeft % 60;
+    box.textContent = (m<10?'0':'')+m + ':' + (s<10?'0':'')+s;
+    box.classList.toggle('low', state.secondsLeft <= 300);
+  }
+
+  function renderQuestion(){
+    var q = state.pool[state.idx];
+    var total = state.pool.length;
+    document.getElementById('quizCounter').textContent = (state.idx+1) + ' / ' + total;
+    document.getElementById('progressFill').style.width = Math.round(((state.idx) / total) * 100) + '%';
+    var qSectionEl = document.getElementById('qSection');
+    qSectionEl.textContent = sectionBadgeText(q);
+    qSectionEl.classList.toggle('extra-badge', !!q.extra);
+    qSectionEl.classList.toggle('accent', !q.extra);
+    document.getElementById('qPoints').textContent = '2 pont';
+    document.getElementById('qStem').textContent = q.stem;
+
+    var optsBox = document.getElementById('qOptions');
+    optsBox.innerHTML = '';
+    var fb = document.getElementById('feedbackBox');
+    fb.innerHTML = '';
+
+    var key = qKey(q);
+    var existing = state.answers[key];
+    var isPractice = state.mode === 'practice';
+
+    ['a','b','c','d'].forEach(function(letter){
+      var btn = document.createElement('button');
+      btn.className = 'opt';
+      btn.innerHTML = '<span class="letter">' + letter + '</span><span>' + q.options[letter] + '</span>';
+      if(existing){
+        if(isPractice){
+          btn.disabled = true;
+          if(letter === q.correct) btn.classList.add('correct');
+          if(letter === existing.chosen && letter !== q.correct) btn.classList.add('wrong');
+          if(letter === existing.chosen) btn.classList.add('selected');
+        } else {
+          if(letter === existing.chosen) btn.classList.add('selected');
+        }
+      }
+      btn.addEventListener('click', function(){ chooseAnswer(q, letter); });
+      optsBox.appendChild(btn);
+    });
+
+    if(existing && isPractice){
+      var good = existing.isCorrect;
+      fb.innerHTML = '<div class="feedback-line ' + (good?'good':'bad') + '">' +
+        (good ? '✓ Helyes válasz.' : '✗ Nem ez a helyes válasz – a helyes: ' + q.correct.toUpperCase() + ') ' + q.options[q.correct]) +
+        '</div>';
+    }
+
+    document.getElementById('prevBtn').disabled = state.idx === 0;
+    var nextBtn = document.getElementById('nextBtn');
+    if(isPractice){
+      nextBtn.disabled = !existing;
+      nextBtn.textContent = (state.idx === total-1) ? 'Eredmény →' : 'Következő →';
+    }
+    updateExamNavHighlight();
+  }
+
+  function sectionBadgeText(q){
+    var base;
+    if(q.section === 'III') base = 'III. Hálózati OS – ' + (q.subgroup === 'Windows' ? 'Windows' : 'Linux');
+    else base = q.section + '. ' + q.sectionName;
+    return base + (q.extra ? ' · bővítő' : '');
+  }
+
+  function chooseAnswer(q, letter){
+    var key = qKey(q);
+    var isCorrect = letter === q.correct;
+    state.answers[key] = { chosen: letter, correct: q.correct, isCorrect: isCorrect, section: filterKey(q) };
+    if(state.mode === 'exam'){
+      updateExamNavHighlight();
+      // auto-advance a beat later for flow, but keep it simple: just re-render to show selection
+      renderQuestion();
+    } else {
+      renderQuestion();
+    }
+  }
+
+  function updateExamNavHighlight(){
+    var nav = document.getElementById('examNav');
+    if(nav.hidden) return;
+    Array.prototype.forEach.call(nav.children, function(dot, i){
+      var q = state.pool[i];
+      var answered = !!state.answers[qKey(q)];
+      dot.classList.toggle('answered', answered);
+      dot.classList.toggle('current', i === state.idx);
+    });
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', function(){
+    if(state.idx > 0){ state.idx--; renderQuestion(); }
+  });
+  document.getElementById('nextBtn').addEventListener('click', function(){
+    if(state.idx < state.pool.length - 1){ state.idx++; renderQuestion(); }
+    else { finishQuiz(); }
+  });
+  document.getElementById('finishBtn').addEventListener('click', finishQuiz);
+  document.getElementById('quitBtn').addEventListener('click', function(){
+    stopTimer();
+    switchScreen('setup');
+  });
+
+  function finishQuiz(){
+    stopTimer();
+    switchScreen('results');
+    renderResults();
+  }
+
+  // ---------- results ----------
+  function renderResults(){
+    var earned = 0, max = 0;
+    var bySection = {};
+    Object.keys(SECTION_META).forEach(function(k){ bySection[k] = { earned:0, max:0, correct:0, total:0 }; });
+
+    state.pool.forEach(function(q){
+      var key = qKey(q);
+      var sk = filterKey(q);
+      bySection[sk].total++;
+      bySection[sk].max += 2;
+      max += 2;
+      var ans = state.answers[key];
+      if(ans && ans.isCorrect){
+        bySection[sk].earned += 2;
+        bySection[sk].correct++;
+        earned += 2;
+      }
+    });
+
+    document.getElementById('resultModeLabel').textContent = (state.mode === 'practice' ? 'Gyakorlás' : 'Verseny szimuláció') + ' eredménye';
+    document.getElementById('scoreNum').textContent = earned;
+    document.getElementById('scoreDen').textContent = '/ ' + max + ' pont';
+    var pct = max ? Math.round((earned/max)*100) : 0;
+    document.getElementById('scorePct').textContent = pct + '%';
+
+    var barsBox = document.getElementById('sectionBars');
+    barsBox.innerHTML = '';
+    Object.keys(SECTION_META).forEach(function(key){
+      var b = bySection[key];
+      if(b.total === 0) return;
+      var pctSec = Math.round((b.earned / b.max) * 100);
+      var row = document.createElement('div');
+      row.className = 'bar-row';
+      row.innerHTML = '<div class="lbl">' + labelFor(key) + '</div>' +
+        '<div class="bar-track"><div class="bar-fill" style="width:' + pctSec + '%"></div></div>' +
+        '<div class="val">' + b.earned + ' / ' + b.max + ' pont</div>';
+      barsBox.appendChild(row);
+    });
+
+    var reviewBox = document.getElementById('reviewList');
+    reviewBox.innerHTML = '';
+    var missed = state.pool.filter(function(q){
+      var ans = state.answers[qKey(q)];
+      return !ans || !ans.isCorrect;
+    });
+    if(!missed.length){
+      reviewBox.innerHTML = '<div class="empty-review">Minden kiválasztott kérdésre helyes választ adtál – szép munka!</div>';
+    } else {
+      missed.forEach(function(q){
+        var ans = state.answers[qKey(q)];
+        var div = document.createElement('div');
+        div.className = 'review-item';
+        var rev = getReviewTopic(q);
+        var youLine = ans ? ('<div class="you"><b>TE</b>' + ans.chosen.toUpperCase() + ') ' + q.options[ans.chosen] + '</div>') : '<div class="you"><b>TE</b>nincs válasz</div>';
+        div.innerHTML = '<div class="review-q">' + sectionBadgeText(q) + ' · ' + q.stem + '</div>' +
+          '<div class="review-ans">' + youLine +
+          '<div class="right"><b>HELYES</b>' + q.correct.toUpperCase() + ') ' + q.options[q.correct] + '</div>' +
+          '<div style="margin-top:6px; color:var(--accent); font-weight:600;"><a href="' + rev.file + '" target="_blank" style="color:var(--accent); text-decoration:none;">➔ Mit érdemes átnézni: ' + rev.topic + ' (Kattints a megnyitáshoz)</a></div>' +
+          '</div>';
+        reviewBox.appendChild(div);
+      });
+    }
+
+    var scopeLabel = Object.keys(state.selected).filter(function(k){return state.selected[k];}).length === 5 ? 'Teljes feladatsor' : 'Egyéni válogatás';
+    saveHistoryEntry({
+      date: new Date().toLocaleDateString('hu-HU', {month:'2-digit', day:'2-digit'}) + ' ' + new Date().toLocaleTimeString('hu-HU', {hour:'2-digit',minute:'2-digit'}),
+      mode: state.mode === 'practice' ? 'Gyakorlás' : 'Verseny',
+      scope: scopeLabel,
+      score: earned, max: max, pct: pct
+    });
+  }
+
+  document.getElementById('backToSetupBtn').addEventListener('click', function(){
+    switchScreen('setup');
+    renderHistory();
+    updateSetupSummary();
+  });
+  document.getElementById('retryBtn').addEventListener('click', function(){
+    startQuiz();
+  });
+
+  function switchScreen(name){
+    state.screen = name;
+    ['setup','quiz','results'].forEach(function(s){
+      document.getElementById('screen-' + s).classList.toggle('active', s === name);
+    });
+    window.scrollTo(0,0);
+  }
+})();
+</script>

@@ -484,6 +484,11 @@
 
   function qKey(q){ return q.section + '-' + q.num; }
 
+  function esc(s){
+    if(!s) return '';
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
   function getReviewTopic(q) {
     var text = (q.stem + ' ' + JSON.stringify(q.options)).toLowerCase();
     var topic = q.sectionName;
@@ -760,7 +765,7 @@
     ['a','b','c','d'].forEach(function(letter){
       var btn = document.createElement('button');
       btn.className = 'opt';
-      btn.innerHTML = '<span class="letter">' + letter + '</span><span>' + q.options[letter] + '</span>';
+      btn.innerHTML = '<span class="letter">' + letter + '</span><span>' + esc(q.options[letter]) + '</span>';
       if(existing){
         if(isPractice){
           btn.disabled = true;
@@ -895,10 +900,10 @@
         var div = document.createElement('div');
         div.className = 'review-item';
         var rev = getReviewTopic(q);
-        var youLine = ans ? ('<div class="you"><b>TE</b>' + ans.chosen.toUpperCase() + ') ' + q.options[ans.chosen] + '</div>') : '<div class="you"><b>TE</b>nincs válasz</div>';
-        div.innerHTML = '<div class="review-q">' + sectionBadgeText(q) + ' · ' + q.stem + '</div>' +
+        var youLine = ans ? ('<div class="you"><b>TE</b>' + ans.chosen.toUpperCase() + ') ' + esc(q.options[ans.chosen]) + '</div>') : '<div class="you"><b>TE</b>nincs válasz</div>';
+        div.innerHTML = '<div class="review-q">' + sectionBadgeText(q) + ' · ' + esc(q.stem) + '</div>' +
           '<div class="review-ans">' + youLine +
-          '<div class="right"><b>HELYES</b>' + q.correct.toUpperCase() + ') ' + q.options[q.correct] + '</div>' +
+          '<div class="right"><b>HELYES</b>' + q.correct.toUpperCase() + ') ' + esc(q.options[q.correct]) + '</div>' +
           '<div style="margin-top:6px; color:var(--accent); font-weight:600;"><a href="' + rev.file + '" target="_blank" style="color:var(--accent); text-decoration:none;">➔ Mit érdemes átnézni: ' + rev.topic + ' (Kattints a megnyitáshoz)</a></div>' +
           '</div>';
         reviewBox.appendChild(div);

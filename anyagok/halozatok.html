@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang='hu'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>II. Hálózatok - Ismeretanyag</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; color: #333; }
+        h1 { color: #0E7C86; border-bottom: 2px solid #0E7C86; padding-bottom: 10px; }
+        h2 { color: #1F8A57; margin-top: 30px; }
+        h3 { color: #5B6E76; }
+        code { background-color: #f4f4f4; padding: 2px 5px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #C1502B; }
+        .note { background-color: #E3F5EC; padding: 15px; border-left: 5px solid #1F8A57; margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f4f4f4; }
+    </style>
+</head>
+<body>
+    <h1>II. Hálózatok - Ismeretanyag</h1>
+    
+        <h2>IP Címzés (IPv4 és IPv6)</h2>
+        <p><b>IPv4:</b> 32 bites cím. <b>IPv6:</b> 128 bites cím.</p>
+        <ul>
+            <li><b>Loopback cím:</b> IPv4-ben <code>127.0.0.1</code>, IPv6-ban <code>::1</code>.</li>
+            <li><b>Broadcast:</b> Mindenkinek szóló üzenet a hálózaton (pl. IPv4: <code>255.255.255.255</code>). IPv6-ban nincs broadcast, helyette multicast van!</li>
+            <li><b>Multicast:</b> Egy csoportnak szóló üzenet (pl. IPv4: <code>224.0.0.1</code>).</li>
+        </ul>
+        
+        <h3>Alhálózatok (Subnetting)</h3>
+        <table>
+            <tr><th>Maszk (CIDR)</th><th>Decimális maszk</th><th>Hosztok száma</th></tr>
+            <tr><td>/24</td><td>255.255.255.0</td><td>254 hoszt</td></tr>
+            <tr><td>/26</td><td>255.255.255.192</td><td>62 hoszt</td></tr>
+            <tr><td>/28</td><td>255.255.255.240</td><td>14 hoszt</td></tr>
+            <tr><td>/29</td><td>255.255.255.248</td><td>6 hoszt</td></tr>
+            <tr><td>/30</td><td>255.255.255.252</td><td>2 hoszt (pont-pont)</td></tr>
+        </table>
+        
+        <h2>Kapcsolók (Switch) és VLAN-ok</h2>
+        <ul>
+            <li><b>VLAN (Virtual LAN):</b> Logikai szegmentálás. A VLAN trönk (trunk) szabványa a <b>802.1Q</b>. Cisco-n a natív (alapértelmezett) VLAN a VLAN 1.</li>
+            <li><b>STP (Spanning Tree Protocol):</b> Hurokmentes topológia fenntartása. Megakadályozza a hálózati hurkokat. Ha egy port <i>Root Bridge</i>-en van, sosem lehet <i>Blocking</i> (blokkolt) állapotban.</li>
+            <li><b>BPDU Guard:</b> Ha BPDU üzenet érkezik egy PortFast (gyorsított) portra, azonnal letiltja azt (err-disable).</li>
+        </ul>
+        
+        <h2>Útválasztás (Routing) és OSPF</h2>
+        <ul>
+            <li>Statikus útvonal beállítása Cisco routeren: <code>ip route [cél hálózat] [maszk] [következő ugrás IP]</code>. A statikus route adminisztratív távolsága (AD) alapértelmezetten <b>1</b>.</li>
+            <li><b>OSPF:</b> Dinamikus routing protokoll, amely <b>Költség (Cost)</b> metrikát használ. A gerinc (backbone) terület mindig az <b>Area 0</b>.</li>
+        </ul>
+        
+        <h2>NAT és PAT</h2>
+        <ul>
+            <li><b>NAT (Network Address Translation):</b> Belső (privát) IP címek külső (publikus) IP címekre fordítása.</li>
+            <li><b>PAT (Port Address Translation) / Overload:</b> Több belső IP egyetlen külső IP-re fordítása portszámok segítségével.</li>
+        </ul>
+        
+        <h2>ACL (Access Control List)</h2>
+        <p>A forgalom szűrésére szolgál. <b>Alapszabály:</b> Ha egy ACL végén nincs explicit engedélyezés (permit), akkor az mindent eldob (implicit deny any).</p>
+        <p>Standard ACL-t mindig a célhoz a legközelebb érdemes tenni, míg az Extended ACL-t a forráshoz közel.</p>
+        
+</body>
+</html>

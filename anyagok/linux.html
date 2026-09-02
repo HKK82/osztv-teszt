@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang='hu'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>III. Linux - Ismeretanyag</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; color: #333; }
+        h1 { color: #0E7C86; border-bottom: 2px solid #0E7C86; padding-bottom: 10px; }
+        h2 { color: #1F8A57; margin-top: 30px; }
+        h3 { color: #5B6E76; }
+        code { background-color: #f4f4f4; padding: 2px 5px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #C1502B; }
+        .note { background-color: #E3F5EC; padding: 15px; border-left: 5px solid #1F8A57; margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f4f4f4; }
+    </style>
+</head>
+<body>
+    <h1>III. Linux - Ismeretanyag</h1>
+    
+        <h2>Fájlrendszer és Jogosultságok</h2>
+        <p>A Linux fájlrendszer hierarchikus. Fontosabb könyvtárak:</p>
+        <ul>
+            <li><code>/etc</code>: Rendszerszintű konfigurációs fájlok.</li>
+            <li><code>/home</code>: Felhasználók saját könyvtárai.</li>
+        </ul>
+        <p>Fontos fájlok:</p>
+        <ul>
+            <li><code>/etc/passwd</code>: Felhasználói fiókok alapadatai.</li>
+            <li><code>/etc/shadow</code>: Felhasználói jelszavak titkosítva tárolva.</li>
+            <li><code>~/.bashrc</code>: Felhasználó saját környezeti változói és beállításai belépéskor.</li>
+        </ul>
+        <p><b>Jogosultságok:</b> <code>chmod 755</code> jelentése: a Tulajdonos olvas, ír, futtat (7), a Csoport és Mások csak olvasnak és futtatnak (5).</p>
+        
+        <h2>Alapvető Parancsok</h2>
+        <ul>
+            <li><code>pwd</code>: Aktuális könyvtár elérése (Print Working Directory).</li>
+            <li><code>ls</code>: Könyvtár tartalmának listázása.</li>
+            <li><code>rm</code>: Fájl törlése.</li>
+            <li><code>cp</code>: Fájl másolása.</li>
+            <li><code>less</code>: Fájl tartalmának megjelenítése oldalanként.</li>
+            <li><code>df</code>: Szabad és foglalt lemezterület.</li>
+            <li><code>free</code>: Memóriahasználat megjelenítése.</li>
+            <li><code>ps</code>: Aktív folyamatok megjelenítése.</li>
+            <li><code>kill [PID]</code>: Folyamat leállítása szignállal.</li>
+            <li><code>sudo</code>: Root (admin) jogosultság kérése egy parancshoz.</li>
+        </ul>
+        
+        <h2>Szolgáltatások és Hálózat</h2>
+        <ul>
+            <li><code>systemctl enable</code>: Szolgáltatás automatikus indítása rendszerindításkor.</li>
+            <li><code>crontab -l</code>: Ütemezett cron feladatok listázása.</li>
+            <li><code>apt update</code> és <code>apt upgrade</code>: Csomagok frissítése Debian/Ubuntu rendszereken.</li>
+            <li><code>ip addr</code>: Hálózati interfészek és IP címek listázása.</li>
+            <li><code>ufw enable</code>: UFW (Uncomplicated Firewall) bekapcsolása. (Tiltás: <code>ufw deny 80/tcp</code>)</li>
+            <li><code>ssh-copy-id</code>: SSH publikus kulcs másolása a távoli szerverre (jelszó nélküli belépéshez).</li>
+            <li><b>Swap:</b> A RAM kiegészítése lemezterülettel, amikor elfogy a fizikai memória.</li>
+        </ul>
+        
+</body>
+</html>

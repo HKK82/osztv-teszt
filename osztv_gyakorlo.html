@@ -509,11 +509,12 @@
     else if(q.section === 'III' && q.subgroup === 'Linux') topic = 'Linux szerver üzemeltetés';
     else if(q.section === 'IV') topic = 'Felhőszolgáltatások';
 
-    // Map topics to specific PDFs (you can copy the PDFs to the Gyakorló folder with these names)
-    if(q.section === 'II' || topic.indexOf('VLAN')!==-1 || topic.indexOf('OSPF')!==-1 || topic.indexOf('IPv4')!==-1 || topic.indexOf('IPv6')!==-1 || topic.indexOf('NAT')!==-1 || topic.indexOf('ACL')!==-1 || topic.indexOf('STP')!==-1 || topic.indexOf('HSRP')!==-1 || topic.indexOf('DHCP')!==-1 || topic.indexOf('DNS')!==-1) file = 'halozatok.pdf';
-    if(q.section === 'III' && q.subgroup === 'Windows' || topic.indexOf('Windows')!==-1) file = 'windows.pdf';
-    if(q.section === 'III' && q.subgroup === 'Linux' || topic.indexOf('Linux')!==-1) file = 'linux.pdf';
-    if(q.section === 'IV' || topic.indexOf('Felhő')!==-1 || topic.indexOf('Konténer')!==-1) file = 'felho.pdf';
+    // Map topics to specific generated HTML pages
+    if(q.section === 'II' || topic.indexOf('VLAN')!==-1 || topic.indexOf('OSPF')!==-1 || topic.indexOf('IPv4')!==-1 || topic.indexOf('IPv6')!==-1 || topic.indexOf('NAT')!==-1 || topic.indexOf('ACL')!==-1 || topic.indexOf('STP')!==-1 || topic.indexOf('HSRP')!==-1 || topic.indexOf('DHCP')!==-1 || topic.indexOf('DNS')!==-1) file = 'halozatok.html';
+    else if(q.section === 'III' && q.subgroup === 'Windows' || topic.indexOf('Windows')!==-1) file = 'windows.html';
+    else if(q.section === 'III' && q.subgroup === 'Linux' || topic.indexOf('Linux')!==-1) file = 'linux.html';
+    else if(q.section === 'IV' || topic.indexOf('Felhő')!==-1 || topic.indexOf('Konténer')!==-1) file = 'felho.html';
+    else file = 'alapismeretek.html';
 
     return { topic: topic, file: 'anyagok/' + file };
   }

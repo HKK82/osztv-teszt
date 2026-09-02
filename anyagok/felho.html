@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang='hu'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>IV. Felhőszolgáltatások - Ismeretanyag</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; color: #333; }
+        h1 { color: #0E7C86; border-bottom: 2px solid #0E7C86; padding-bottom: 10px; }
+        h2 { color: #1F8A57; margin-top: 30px; }
+        h3 { color: #5B6E76; }
+        code { background-color: #f4f4f4; padding: 2px 5px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #C1502B; }
+        .note { background-color: #E3F5EC; padding: 15px; border-left: 5px solid #1F8A57; margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f4f4f4; }
+    </style>
+</head>
+<body>
+    <h1>IV. Felhőszolgáltatások - Ismeretanyag</h1>
+    
+        <h2>Felhőmodellek (aaS - as a Service)</h2>
+        <ul>
+            <li><b>IaaS (Infrastructure as a Service):</b> Infrastruktúra bérlése (pl. Microsoft Azure VM). A felhasználó maga telepíti az OS-t és szoftvereket, ő menedzseli a legtöbb dolgot.</li>
+            <li><b>PaaS (Platform as a Service):</b> Fejlesztési és futtatási környezet biztosítása (pl. Google App Engine). Nincs gond az operációs rendszerrel, csak a kódot kell hozni.</li>
+            <li><b>SaaS (Software as a Service):</b> Kész, azonnal használható alkalmazás interneten keresztül (pl. Office 365, Dropbox).</li>
+        </ul>
+        
+        <h2>Felhő Kialakítások</h2>
+        <ul>
+            <li><b>Public Cloud (Nyilvános):</b> Az infrastruktúrát megosztjuk a nyilvánossággal, a szolgáltató birtokolja (pl. AWS, Azure).</li>
+            <li><b>Private Cloud (Privát):</b> Kizárólag egyetlen szervezet használja, sokszor saját adatközpontban.</li>
+            <li><b>Hybrid Cloud (Hibrid):</b> A nyilvános és privát felhő kombinációja.</li>
+            <li><b>Multi-cloud:</b> Több különböző felhőszolgáltató együttes használata (pl. AWS és Azure egyszerre).</li>
+        </ul>
+        
+        <h2>Méretezés és Elosztás</h2>
+        <ul>
+            <li><b>Vertical scaling (Felfelé skálázás):</b> Erőforrások növelése egyetlen gépen (több RAM, erősebb CPU). Hátránya: fizikai korlátokba ütközik.</li>
+            <li><b>Horizontal scaling (Kifelé skálázás):</b> Újabb szerverek hozzáadása a rendszerhez.</li>
+            <li><b>Autoscaling:</b> Az erőforrások automatikus igazítása a pillanatnyi terheléshez.</li>
+            <li><b>Load Balancer (Terheléselosztó):</b> A bejövő forgalom elosztása több szerver között.</li>
+            <li><b>Georedundancia és Multi-region:</b> Adatok több földrajzi helyen való tárolása a jobb rendelkezésre állás (hibatűrés) érdekében.</li>
+            <li><b>Pay-as-you-go:</b> Csak a ténylegesen felhasznált erőforrásokért kell fizetni. Költségoptimalizálás: az erőforrások valós igényhez igazítása.</li>
+        </ul>
+        
+        <h2>Modern Technológiák</h2>
+        <ul>
+            <li><b>Konténerek (Docker):</b> Alkalmazások könnyű csomagolása, hordozhatósága.</li>
+            <li><b>Kubernetes:</b> Konténerek ütemezése, skálázása és menedzselése.</li>
+            <li><b>CI/CD:</b> Folyamatos integráció és folyamatos szállítás (automatikus tesztelés és kiadás).</li>
+            <li><b>Serverless:</b> Kiszolgáló nélküli számítás. A fejlesztő egyáltalán nem foglalkozik szerverekkel, csak kódokat futtat.</li>
+            <li><b>Zero Trust:</b> "Senki sem megbízható alapértelmezésben" biztonsági modell. Minden kérést azonosítani kell.</li>
+            <li><b>IaC (Infrastructure as Code):</b> Felhőerőforrások kódból történő, automatizált létrehozása (pl. Terraform).</li>
+        </ul>
+        
+        <h2>AWS és Azure Példák</h2>
+        <ul>
+            <li><b>Amazon S3:</b> Objektumtároló szolgáltatás. Az S3 Glacier a hideg (olcsó, de lassú) archiválásra való.</li>
+            <li><b>AWS IAM:</b> Felhasználók és jogosultságok kezelése az AWS-ben.</li>
+            <li><b>AWS RDS / Azure SQL Database:</b> Felhőben elérhető, felügyelt relációs adatbázis szolgáltatások.</li>
+        </ul>
+        
+</body>
+</html>

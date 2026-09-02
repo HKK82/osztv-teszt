@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang='hu'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>III. Windows Server - Ismeretanyag</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; color: #333; }
+        h1 { color: #0E7C86; border-bottom: 2px solid #0E7C86; padding-bottom: 10px; }
+        h2 { color: #1F8A57; margin-top: 30px; }
+        h3 { color: #5B6E76; }
+        code { background-color: #f4f4f4; padding: 2px 5px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; color: #C1502B; }
+        .note { background-color: #E3F5EC; padding: 15px; border-left: 5px solid #1F8A57; margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f4f4f4; }
+    </style>
+</head>
+<body>
+    <h1>III. Windows Server - Ismeretanyag</h1>
+    
+        <h2>Active Directory és Tartományok</h2>
+        <p>A <b>Munkacsoport (Workgroup)</b> decentralizált, míg a <b>Tartomány (Domain)</b> központilag menedzselt. Az Active Directory (AD) teljes mértékben a <b>DNS</b>-re (Domain Name System) támaszkodik, anélkül nem működik.</p>
+        <ul>
+            <li><b>SYSVOL mappa:</b> A csoportházirendek (GPO) és a bejelentkezési szkriptek (logon scripts) tárolására szolgál a Domain Controlleren.</li>
+            <li>Fiók letiltása (Disable): A fiók adatai megmaradnak, de a felhasználó nem tud bejelentkezni.</li>
+        </ul>
+        
+        <h2>GPO (Group Policy Object)</h2>
+        <p>A Csoportházirend célja a felhasználók és számítógépek beállításainak központi kezelése. Ezzel tiltható le például a Vezérlőpult, vagy állítható be a háttérkép minden gépen.</p>
+        
+        <h2>PowerShell és Parancsok</h2>
+        <ul>
+            <li>Új AD felhasználó létrehozása: <code>New-ADUser</code></li>
+            <li>Futó szolgáltatások listázása: <code>Get-Service</code></li>
+            <li>Futó folyamatok: <code>tasklist</code></li>
+            <li>Fájlrendszer ellenőrzése: <code>sfc /scannow</code></li>
+            <li>Leállítás azonnal: <code>shutdown /s /t 0</code></li>
+        </ul>
+        
+        <h2>Fontos Windows Szolgáltatások</h2>
+        <ul>
+            <li><b>WSUS:</b> Windows Server Update Services - Frissítések központi terjesztése a hálózaton.</li>
+            <li><b>WDS:</b> Windows Deployment Services - Felügyelet nélküli (hálózati) operációs rendszer telepítésekhez.</li>
+            <li><b>IIS:</b> Internet Information Services - Windows Server webszerver szerepköre.</li>
+            <li><b>Hyper-V:</b> A Microsoft beépített virtualizációs technológiája.</li>
+            <li><b>RDP:</b> Remote Desktop Protocol - Távoli asztali elérés.</li>
+            <li><b>Windows Server Core:</b> Csak parancssoros felület, kevesebb erőforrást használ és kisebb a támadási felülete.</li>
+            <li><b>Failover Clustering:</b> Nagy rendelkezésre állás (HA) biztosítása szerverek között.</li>
+        </ul>
+        
+</body>
+</html>
